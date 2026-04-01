@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psar Kaksekor — Fresh Market App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --gd:#1a3a2a;--gm:#2d5a3f;--ga:#3d7a52;--gl:#5ca870;--gp:#e8f5ec;
+          --yellow:#f5c842;--red:#e84b4b;--blue:#3b82f6;
+          --off:#f5f7f5;--g100:#f0f2f0;--g200:#e0e4e0;--g400:#9aab9a;--g600:#5a6a5a;
+          --td:#1a2a1a;--tm:#3a4a3a;
+          --ss:0 2px 8px rgba(0,0,0,.08);
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:#12221a;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px 40px}
+        body::before{content:'';position:fixed;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(93,168,112,.12) 0%,transparent 70%);pointer-events:none}
+        .app-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:26px;color:#fff;margin-bottom:4px}
+        .app-subtitle{font-size:11px;color:var(--gl);margin-bottom:28px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+        .page-tabs{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:4px;gap:2px;margin-bottom:28px;flex-wrap:wrap;justify-content:center}
+        .page-tab{padding:7px 14px;border-radius:50px;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;transition:all .2s;border:none;background:none;font-family:'DM Sans',sans-serif}
+        .page-tab.active{background:var(--gl);color:#fff;box-shadow:0 2px 10px rgba(92,168,112,.4)}
+
+        /* Phone */
+        .phone-shell{width:336px;height:672px;background:#0d1f12;border-radius:44px;padding:11px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 24px 72px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.08);position:relative}
+        .phone-shell::before{content:'';position:absolute;top:11px;left:50%;transform:translateX(-50%);width:96px;height:26px;background:#060f08;border-radius:0 0 16px 16px;z-index:100}
+        .phone-screen{width:100%;height:100%;border-radius:34px;overflow:hidden;background:var(--off);position:relative;display:flex;flex-direction:column}
+
+        /* ── Tab Screens ── */
+        /* The phone-screen is a flex column: screens stack in the middle, shared nav at bottom */
+        .tab-area{flex:1;position:relative;overflow:hidden}
+        .screen{display:none;width:100%;height:100%;flex-direction:column;overflow:hidden;position:absolute;top:0;left:0;background:var(--off)}
+        .screen.active{display:flex;animation:pgIn .25s ease}
+        @keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* ── Shared Bottom Nav ── */
+        .bottom-nav{background:#fff;border-top:1px solid var(--g200);display:flex;padding:7px 0 9px;flex-shrink:0;position:relative;z-index:10}
+        .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:8.5px;color:var(--g400);font-weight:700;transition:color .15s;position:relative}
+        .nav-item.active{color:var(--ga)}
+        .nav-item svg{width:19px;height:19px}
+        .nav-badge{position:absolute;top:-2px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:8px;font-weight:900;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif}
+
+        /* ── Shared styles ── */
+        .s-header{background:var(--gd);padding:42px 15px 14px;border-radius:0 0 22px 22px;flex-shrink:0}
+        .brand{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#fff;display:flex;align-items:center;gap:5px}
+        .avatar{width:30px;height:30px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#fff;cursor:pointer}
+        .search-bar{background:rgba(255,255,255,.1);border-radius:11px;padding:8px 12px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.45);font-size:11.5px;cursor:pointer}
+        .section-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:12.5px;color:var(--td);margin-bottom:9px}
+        .scrollbody{flex:1;overflow-y:auto;padding:13px}
+        .scrollbody::-webkit-scrollbar{display:none}
+        .chip-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+        .chip{padding:5px 11px;border-radius:20px;font-size:10.5px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+        .chip.active{background:var(--gd);color:#fff}
+        .chip:not(.active){background:var(--g100);color:var(--g600)}
+        .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+        .product-card{background:#fff;border-radius:14px;padding:11px;box-shadow:var(--ss);cursor:pointer;transition:transform .15s}
+        .product-card:active{transform:scale(.97)}
+        .product-img{width:100%;height:58px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:7px}
+        .product-name{font-weight:800;font-size:10.5px;color:var(--td);margin-bottom:2px;font-family:'Nunito',sans-serif}
+        .product-farm{font-size:9px;color:var(--g400);margin-bottom:3px}
+        .product-price{font-weight:900;font-size:11px;color:var(--ga);font-family:'Nunito',sans-serif}
+        .btn-primary{width:100%;padding:13px;background:var(--gd);color:#fff;border:none;border-radius:13px;font-size:12.5px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;margin-bottom:7px;transition:background .15s,transform .1s}
+        .btn-primary:active{transform:scale(.98);background:var(--gm)}
+        .btn-secondary{width:100%;padding:11px;background:none;color:var(--ga);border:1.5px solid var(--g200);border-radius:13px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer}
+
+        /* Browse */
+        #pg-browse .browse-search{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);border-radius:13px;padding:9px 13px;display:flex;align-items:center;gap:8px;margin-top:4px}
+        #pg-browse .browse-search input{background:none;border:none;outline:none;color:#fff;font-size:12px;font-family:'DM Sans',sans-serif;width:100%;font-weight:500}
+        #pg-browse .browse-search input::placeholder{color:rgba(255,255,255,.4)}
+        .farm-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+        .farm-row::-webkit-scrollbar{display:none}
+        .farm-pill{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex-shrink:0}
+        .farm-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid var(--g200)}
+        .farm-name{font-size:9px;font-weight:700;color:var(--g600);text-align:center;max-width:50px}
+        .search-results{display:none;flex-direction:column;gap:7px}
+        .search-results.visible{display:flex}
+        .search-result-item{background:#fff;border-radius:12px;padding:10px;display:flex;align-items:center;gap:10px;box-shadow:var(--ss);cursor:pointer}
+        .sri-emoji{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+        .sri-name{font-weight:800;font-size:11px;color:var(--td);font-family:'Nunito',sans-serif}
+        .sri-meta{font-size:9.5px;color:var(--g400);margin-top:1px}
+        .sri-price{font-weight:900;font-size:12px;color:var(--ga);font-family:'Nunito',sans-serif;margin-left:auto;flex-shrink:0}
+        .no-results{text-align:center;padding:30px 20px;color:var(--g400);font-size:12px}
+
+        /* Product Detail */
+        .p2-hero{background:linear-gradient(155deg,#dff0e5 0%,#c8e6d2 100%);padding:42px 18px 16px;display:flex;flex-direction:column;align-items:center;position:relative;flex-shrink:0}
+        .organic-badge{position:absolute;top:42px;right:14px;background:var(--ga);color:#fff;font-size:8.5px;font-weight:800;padding:4px 9px;border-radius:20px}
+        .hero-emoji{font-size:68px;margin:6px 0 12px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.1));animation:float 3s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+        .p2-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:19px;color:var(--td)}
+        .p2-farm{font-size:10.5px;color:var(--g400);margin:2px 0 7px}
+        .star-row{display:flex;align-items:center;gap:5px;margin-bottom:10px}
+        .stars{color:var(--yellow);font-size:12px}
+        .rating-text{font-size:10px;color:var(--g600);font-weight:600}
+        .price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:3px}
+        .big-price{font-family:'Nunito',sans-serif;font-weight:900;font-size:26px;color:var(--gd)}
+        .price-unit{font-size:12px;color:var(--g400)}
+        .stock-text{font-size:10px;color:var(--g400);margin-bottom:12px}
+        .divider{height:1px;background:var(--g200);margin:10px 0}
+        .about-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:var(--td);margin-bottom:5px}
+        .about-text{font-size:10.5px;color:var(--g600);line-height:1.6;margin-bottom:12px}
+        .qty-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+        .qty-label{font-size:11.5px;color:var(--tm);font-weight:600}
+        .qty-control{display:flex;align-items:center;background:var(--g100);border-radius:9px;overflow:hidden}
+        .qty-btn{width:28px;height:28px;background:none;border:none;font-size:15px;font-weight:800;color:var(--ga);cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .qty-val{min-width:30px;text-align:center;font-weight:900;font-size:13px;color:var(--td);font-family:'Nunito',sans-serif}
+
+        /* Seller */
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}
+        .stat-card{background:rgba(255,255,255,.09);border-radius:11px;padding:9px 11px;border:1px solid rgba(255,255,255,.07)}
+        .stat-val{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;color:#fff}
+        .stat-label{font-size:9px;color:rgba(255,255,255,.45);margin-top:2px}
+        .order-list{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
+        .order-card{background:#fff;border-radius:11px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--ss)}
+        .order-id{font-size:10.5px;font-weight:800;color:var(--td);font-family:'Nunito',sans-serif}
+        .order-meta{font-size:9.5px;color:var(--g400);margin-top:1px}
+        .status-badge{padding:4px 9px;border-radius:20px;font-size:9px;font-weight:800}
+        .sp{background:#fff3cd;color:#956e00}.sc{background:#d4edda;color:#1a5c2a}.sd{background:var(--g100);color:var(--g600)}
+        .action-btns{display:flex;gap:7px;margin-bottom:12px}
+        .action-btn{flex:1;padding:11px 6px;border:none;border-radius:12px;font-size:10.5px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+        .action-btn.primary{background:var(--gd);color:#fff}
+        .action-btn.secondary{background:var(--g100);color:var(--gm)}
+
+        /* Cart */
+        .cart-items{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
+        .cart-item-wrap{position:relative;border-radius:13px;overflow:hidden}
+        .delete-reveal{position:absolute;right:0;top:0;height:100%;width:70px;background:var(--red);display:flex;align-items:center;justify-content:center;border-radius:0 13px 13px 0;z-index:0;cursor:pointer}
+        .delete-reveal svg{color:#fff;width:20px;height:20px}
+        .cart-item{background:#fff;border-radius:13px;padding:9px 11px;display:flex;align-items:center;gap:9px;box-shadow:var(--ss);position:relative;transition:transform .3s ease;z-index:1}
+        .cart-emoji{width:42px;height:42px;background:var(--gp);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+        .cart-info{flex:1}
+        .cart-name{font-weight:800;font-size:11px;color:var(--td);font-family:'Nunito',sans-serif}
+        .cart-sub{font-size:9.5px;color:var(--g400);margin-top:2px}
+        .cart-price{font-weight:900;font-size:12px;color:var(--ga);font-family:'Nunito',sans-serif}
+        .order-summary{background:#fff;border-radius:14px;padding:12px;box-shadow:var(--ss);margin-bottom:12px}
+        .summary-row{display:flex;justify-content:space-between;font-size:11px;color:var(--g600);margin-bottom:5px}
+        .summary-row.total{border-top:1px solid var(--g200);padding-top:7px;margin-top:3px;font-weight:900;font-size:13px;color:var(--td);font-family:'Nunito',sans-serif}
+        .payment-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:11.5px;color:var(--td);margin-bottom:7px}
+        .payment-options{display:flex;gap:7px;margin-bottom:12px}
+        .payment-opt{flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--g200);font-size:10px;font-weight:700;color:var(--g600);cursor:pointer;text-align:center;background:#fff;font-family:'DM Sans',sans-serif;transition:all .15s}
+        .payment-opt.selected{border-color:var(--ga);color:var(--ga);background:var(--gp)}
+
+        /* Profile */
+        .profile-hero{background:linear-gradient(160deg,var(--gd) 0%,var(--gm) 100%);padding:42px 16px 20px;border-radius:0 0 28px 28px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;position:relative}
+        .profile-user-toggle{display:flex;background:rgba(255,255,255,.12);border-radius:20px;padding:3px;gap:2px;margin-bottom:14px}
+        .put-btn{padding:5px 18px;border-radius:17px;font-size:10.5px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,.5);background:none;transition:all .2s}
+        .put-btn.active{background:rgba(255,255,255,.2);color:#fff}
+        .profile-avatar-wrap{position:relative;margin-bottom:8px}
+        .profile-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--gl),var(--ga));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;border:3px solid rgba(255,255,255,.3)}
+        .edit-avatar{position:absolute;bottom:0;right:0;width:20px;height:20px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer}
+        .profile-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#fff;margin-bottom:2px}
+        .profile-role{font-size:10px;color:rgba(255,255,255,.45);margin-bottom:2px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+        .profile-loc{font-size:10.5px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:3px;margin-bottom:12px}
+        .edit-profile-btn{padding:7px 20px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;color:#fff;font-size:10.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+        .profile-body{flex:1;overflow-y:auto;padding:14px}
+        .profile-body::-webkit-scrollbar{display:none}
+        .profile-section{background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:var(--ss)}
+        .ps-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:11.5px;color:var(--td);margin-bottom:10px}
+        .ps-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--g100)}
+        .ps-row:last-child{border-bottom:none;padding-bottom:0}
+        .ps-row-label{font-size:10.5px;color:var(--g600);display:flex;align-items:center;gap:6px}
+        .ps-row-val{font-size:10.5px;color:var(--td);font-weight:600;font-family:'Nunito',sans-serif}
+        .ps-row-badge{padding:2px 8px;border-radius:10px;font-size:8.5px;font-weight:800;background:#d4edda;color:#1a5c2a}
+        .toggle-sm{width:32px;height:18px;background:var(--ga);border-radius:9px;position:relative;cursor:pointer;flex-shrink:0}
+        .toggle-sm::after{content:'';position:absolute;top:3px;right:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:right .2s}
+        .toggle-sm.off{background:var(--g200)}
+        .toggle-sm.off::after{right:17px}
+        .linked-accounts{display:flex;gap:7px;margin-top:6px}
+        .linked-acc{padding:5px 10px;border-radius:9px;border:1.5px solid var(--g200);font-size:9.5px;font-weight:700;color:var(--g600);cursor:pointer}
+        .linked-acc.connected{border-color:var(--ga);color:var(--ga);background:var(--gp)}
+        .action-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--g100);cursor:pointer}
+        .action-row:last-child{border-bottom:none;padding-bottom:0}
+        .action-row-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+        .action-row-label{font-size:11px;color:var(--td);font-weight:600;flex:1}
+        .action-row-arrow{color:var(--g400);font-size:11px}
+        .action-row.danger .action-row-label{color:var(--red)}
+        .earnings-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+        .earn-card{background:var(--gp);border-radius:10px;padding:8px;text-align:center}
+        .earn-val{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;color:var(--gd)}
+        .earn-label{font-size:8.5px;color:var(--g600);margin-top:1px}
+        .wish-item{background:#fff;border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:9px;box-shadow:var(--ss);margin-bottom:7px}
+        .wish-emoji{width:36px;height:36px;background:var(--gp);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+        .wish-info{flex:1}
+        .wish-name{font-weight:800;font-size:10.5px;color:var(--td);font-family:'Nunito',sans-serif}
+        .wish-farm{font-size:9px;color:var(--g400)}
+        .wish-heart{color:var(--red);font-size:15px;cursor:pointer}
+
+        /* Seller sub-page styles */
+        .stock-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px}
+        .stock-ok{background:#3d7a52}.stock-low{background:var(--yellow)}.stock-out{background:var(--red)}
+        .product-row{background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:9px;box-shadow:var(--ss);margin-bottom:7px}
+        .pr-emoji{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+        .pr-info{flex:1}
+        .pr-name{font-weight:800;font-size:11px;color:var(--td);font-family:'Nunito',sans-serif}
+        .pr-meta{font-size:9.5px;color:var(--g400);margin-top:1px}
+        .pr-actions{display:flex;gap:5px}
+        .pr-btn{padding:4px 9px;border-radius:8px;font-size:9px;font-weight:800;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+        .pr-btn.edit{background:var(--gp);color:var(--ga)}
+        .pr-btn.del{background:#ffeaea;color:var(--red)}
+        .form-group{margin-bottom:11px}
+        .form-label{font-size:11px;font-weight:700;color:var(--tm);margin-bottom:5px;display:block;font-family:'Nunito',sans-serif}
+        .form-input{width:100%;padding:10px 12px;border:1.5px solid var(--g200);border-radius:11px;font-size:11.5px;font-family:'DM Sans',sans-serif;color:var(--td);background:#fff;outline:none;transition:border-color .15s}
+        .form-input:focus{border-color:var(--ga)}
+        .form-input::placeholder{color:var(--g400)}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+        .form-select{width:100%;padding:10px 12px;border:1.5px solid var(--g200);border-radius:11px;font-size:11.5px;font-family:'DM Sans',sans-serif;color:var(--td);background:#fff;outline:none}
+        .img-upload{width:100%;height:70px;border:2px dashed var(--g200);border-radius:11px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--g400);font-size:11px;transition:border-color .15s}
+        .img-upload:hover{border-color:var(--ga);color:var(--ga)}
+        .order-full-card{background:#fff;border-radius:13px;padding:11px 12px;box-shadow:var(--ss);margin-bottom:8px}
+        .ofc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+        .ofc-id{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;color:var(--td)}
+        .ofc-items{font-size:10px;color:var(--g600);margin-bottom:6px}
+        .ofc-bottom{display:flex;align-items:center;justify-content:space-between}
+        .ofc-total{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:var(--gd)}
+        .ofc-action{padding:5px 12px;border:none;border-radius:8px;font-size:9.5px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif}
+        .ofc-action.confirm{background:var(--gp);color:var(--ga)}
+        .ofc-action.ship{background:#dbeafe;color:var(--blue)}
+        .ofc-action.done{background:var(--g100);color:var(--g600)}
+        .order-tabs{display:flex;gap:5px;margin-bottom:12px}
+        .otab{padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+        .otab.active{background:var(--gd);color:#fff}
+        .otab:not(.active){background:var(--g100);color:var(--g600)}
+
+        /* Modal */
+        .modal-overlay{
+          display:none;position:absolute;top:0;left:0;width:100%;height:100%;
+          background:rgba(0,0,0,.45);z-index:200;align-items:flex-end;
+        }
+        .modal-overlay.open{display:flex;}
+        .modal-overlay.open{ animation:overlayIn .22s ease forwards; }
+        .modal-overlay.closing{ animation:overlayOut .28s ease forwards; }
+        @keyframes overlayIn{from{opacity:0}to{opacity:1}}
+        @keyframes overlayOut{from{opacity:1}to{opacity:0}}
+
+        .modal-sheet{
+          width:100%;background:#fff;border-radius:22px 22px 0 0;
+          max-height:88%;display:flex;flex-direction:column;
+          transform:translateY(100%);
+        }
+        .modal-overlay.open .modal-sheet{ animation:sheetUp .32s cubic-bezier(.25,.46,.45,.94) forwards; }
+        .modal-overlay.closing .modal-sheet{ animation:sheetDown .28s cubic-bezier(.55,.0,.45,1) forwards; }
+        @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+        @keyframes sheetDown{from{transform:translateY(0)}to{transform:translateY(100%)}}
+
+        .modal-handle{width:36px;height:4px;background:var(--g200);border-radius:2px;margin:10px auto 4px}
+        .modal-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 10px;flex-shrink:0;border-bottom:1px solid var(--g100)}
+        .modal-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;color:var(--td)}
+        .modal-close{width:26px;height:26px;background:var(--g100);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--g600)}
+        .modal-body{flex:1;overflow-y:auto;padding:14px}
+        .modal-body::-webkit-scrollbar{display:none}
+
+        /* Order Tracker */
+        .tracker-card{background:#fff;border-radius:14px;padding:12px;box-shadow:var(--ss);margin-bottom:10px}
+        .tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+        .tc-id{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;color:var(--td)}
+        .tc-date{font-size:9.5px;color:var(--g400);margin-top:1px}
+        .tc-items{font-size:10px;color:var(--g600);margin-bottom:10px}
+        .tc-total{font-family:'Nunito',sans-serif;font-weight:800;font-size:11.5px;color:var(--gd);margin-bottom:12px}
+        /* Progress steps */
+        .progress-track{display:flex;align-items:flex-start;position:relative;margin-bottom:6px}
+        .progress-track::before{content:'';position:absolute;top:11px;left:11px;right:11px;height:2px;background:var(--g200);z-index:0}
+        .progress-fill{position:absolute;top:11px;left:11px;height:2px;background:var(--gl);z-index:1;transition:width .4s ease}
+        .prog-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:2}
+        .prog-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--g200);background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .3s}
+        .prog-dot.done{background:var(--gl);border-color:var(--gl);color:#fff}
+        .prog-dot.active{background:var(--gd);border-color:var(--gd);color:#fff;box-shadow:0 0 0 3px rgba(92,168,112,.25)}
+        .prog-label{font-size:8px;font-weight:700;color:var(--g400);text-align:center;line-height:1.2;max-width:44px}
+        .prog-label.done{color:var(--gl)}
+        .prog-label.active{color:var(--gd);font-weight:800}
+        .tc-action-row{display:flex;gap:7px;margin-top:8px}
+        .tc-btn{flex:1;padding:7px;border:none;border-radius:9px;font-size:10px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+        .tc-btn.primary{background:var(--gd);color:#fff}
+        .tc-btn.ghost{background:var(--g100);color:var(--gm)}
+        .tc-btn.red{background:#ffeaea;color:var(--red)}
+        .order-view-tabs{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none}
+        .order-view-tabs::-webkit-scrollbar{display:none}
+        .ovtab{padding:6px 13px;border-radius:20px;font-size:10px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;flex-shrink:0}
+        .ovtab.active{background:var(--gd);color:#fff}
+        .ovtab:not(.active){background:var(--g100);color:var(--g600)}
+        .toast{position:absolute;bottom:58px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--gd);color:#fff;padding:10px 20px;border-radius:50px;font-size:11.5px;font-weight:700;font-family:'Nunito',sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;white-space:nowrap;opacity:0;pointer-events:none}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+        .page-label{text-align:center;margin-top:18px}
+        .page-label-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;color:#fff}
+        .page-label-desc{font-size:11px;color:var(--gl);margin-top:3px}
+    </style>
+</head>
+<body>
+<div class="app-title">🌿 Psar Kaksekor</div>
+<div class="app-subtitle">Fresh Market · Mobile Demo</div>
+
+<div class="page-tabs">
+    <button class="page-tab active"  onclick="goTo('pg-home')">🏠 Home</button>
+    <button class="page-tab"         onclick="goTo('pg-browse')">🔍 Browse</button>
+    <button class="page-tab"         onclick="goTo('pg-seller')">📊 Seller</button>
+    <button class="page-tab"         onclick="goTo('pg-cart')">🛒 Cart</button>
+    <button class="page-tab"         onclick="goTo('pg-profile')">👤 Profile</button>
+</div>
+
+<div class="phone-shell">
+    <div class="phone-screen">
+
+        <!-- ══ TAB AREA ══ -->
+        <div class="tab-area">
+            <div class="toast" id="toast"></div>
+
+            <!-- ══════════ HOME ══════════ -->
+            <div class="screen active" id="pg-home">
+                <div class="s-header">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                        <div class="brand">🌿 Psar Kaksekor</div>
+                        <div class="avatar" onclick="goTo('pg-profile')">K</div>
+                    </div>
+                    <div class="search-bar" onclick="goTo('pg-browse')">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Search vegetables, rice...
+                    </div>
+                </div>
+                <div class="scrollbody">
+                    <div class="chip-row">
+                        <button class="chip active" onclick="filterHome('all',this)">All</button>
+                        <button class="chip" onclick="filterHome('veg',this)">🥦 Veggies</button>
+                        <button class="chip" onclick="filterHome('grain',this)">🌾 Grains</button>
+                        <button class="chip" onclick="filterHome('fruit',this)">🍎 Fruit</button>
+                    </div>
+                    <div class="section-title">Fresh Products Near You</div>
+                    <div class="product-grid" id="home-grid"></div>
+                </div>
+            </div>
+
+            <!-- ══════════ BROWSE ══════════ -->
+            <div class="screen" id="pg-browse">
+                <div class="s-header">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                        <div class="brand">🔍 Browse</div>
+                        <div class="avatar" onclick="goTo('pg-profile')">K</div>
+                    </div>
+                    <div class="browse-search">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input type="text" placeholder="Search products, farms..." id="browse-input" oninput="handleSearch(this.value)">
+                    </div>
+                </div>
+                <div class="scrollbody">
+                    <div id="browse-default">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+                            <div class="section-title" style="margin-bottom:0">🔥 Trending Farms</div>
+                            <span style="font-size:9.5px;color:var(--ga);font-weight:700">Updated today</span>
+                        </div>
+                        <div class="farm-row">
+                            <div class="farm-pill" onclick="openDetail('🥕','Organic Carrots','Sok Farm · 12kg','$0.80/kg')">
+                                <div class="farm-avatar" style="background:#fff5e8;border-color:var(--gl)">🌾</div>
+                                <div class="farm-name">Sok Farm</div>
+                                <div style="font-size:8px;color:var(--gl);font-weight:700">↑ #1</div>
+                            </div>
+                            <div class="farm-pill" onclick="openDetail('🌽','Sweet Corn','Meas Farm · 40pcs','$0.30/pc')">
+                                <div class="farm-avatar" style="background:#fffde8">🌽</div>
+                                <div class="farm-name">Meas Farm</div>
+                                <div style="font-size:8px;color:var(--g400);font-weight:700">↑ #2</div>
+                            </div>
+                            <div class="farm-pill" onclick="openDetail('🥬','Morning Glory','Srey Farm · 18kg','$0.60/kg')">
+                                <div class="farm-avatar" style="background:#f0fff4">🥬</div>
+                                <div class="farm-name">Srey Farm</div>
+                                <div style="font-size:8px;color:var(--g400);font-weight:700">↑ #3</div>
+                            </div>
+                            <div class="farm-pill" onclick="openDetail('🧅','Red Onion','Dara Farm · 25kg','$1.20/kg')">
+                                <div class="farm-avatar" style="background:#fff0f0">🧅</div>
+                                <div class="farm-name">Dara Farm</div>
+                                <div style="font-size:8px;color:var(--g400);font-weight:700">— #4</div>
+                            </div>
+                            <div class="farm-pill" onclick="openDetail('🍅','Fresh Tomatoes','Chan Farm · 15kg','$0.90/kg')">
+                                <div class="farm-avatar" style="background:#fff0f5">🍅</div>
+                                <div class="farm-name">Chan Farm</div>
+                                <div style="font-size:8px;color:var(--g400);font-weight:700">↑ #5</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+                            <div class="section-title" style="margin-bottom:0">📈 Trending Products</div>
+                            <span style="font-size:9.5px;color:var(--g400);font-weight:600">This week</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+                            <div class="search-result-item" onclick="openDetail('🥕','Organic Carrots','Sok Farm · 12kg','$0.80/kg')"><div style="width:22px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:var(--yellow);text-align:center;flex-shrink:0">1</div><div class="sri-emoji" style="background:#fff5e8">🥕</div><div><div class="sri-name">Organic Carrots</div><div class="sri-meta">Sok Farm · 238 views</div></div><div class="sri-price">$0.80/kg</div></div>
+                            <div class="search-result-item" onclick="openDetail('🌽','Sweet Corn','Meas Farm · 40pcs','$0.30/pc')"><div style="width:22px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:var(--g400);text-align:center;flex-shrink:0">2</div><div class="sri-emoji" style="background:#fffde8">🌽</div><div><div class="sri-name">Sweet Corn</div><div class="sri-meta">Meas Farm · 182 views</div></div><div class="sri-price">$0.30/pc</div></div>
+                            <div class="search-result-item" onclick="openDetail('🌾','Jasmine Rice','Meas Farm · 50kg','$1.20/kg')"><div style="width:22px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:var(--g400);text-align:center;flex-shrink:0">3</div><div class="sri-emoji" style="background:#fffde8">🌾</div><div><div class="sri-name">Jasmine Rice</div><div class="sri-meta">Meas Farm · 156 views</div></div><div class="sri-price">$1.20/kg</div></div>
+                            <div class="search-result-item" onclick="openDetail('🥬','Morning Glory','Srey Farm · 18kg','$0.60/kg')"><div style="width:22px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:var(--g400);text-align:center;flex-shrink:0">4</div><div class="sri-emoji" style="background:#f0fff4">🥬</div><div><div class="sri-name">Morning Glory</div><div class="sri-meta">Srey Farm · 143 views</div></div><div class="sri-price">$0.60/kg</div></div>
+                            <div class="search-result-item" onclick="openDetail('🍅','Fresh Tomatoes','Chan Farm · 15kg','$0.90/kg')"><div style="width:22px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:var(--g400);text-align:center;flex-shrink:0">5</div><div class="sri-emoji" style="background:#fff0f5">🍅</div><div><div class="sri-name">Fresh Tomatoes</div><div class="sri-meta">Chan Farm · 121 views</div></div><div class="sri-price">$0.90/kg</div></div>
+                        </div>
+                    </div>
+                    <div class="search-results" id="browse-results"></div>
+                </div>
+            </div>
+
+            <!-- ══════════ PRODUCT DETAIL (semi-modal sheet) ══════════ -->
+            <div class="modal-overlay" id="modal-detail" onclick="closeModal('modal-detail',event)">
+                <div class="modal-sheet" style="max-height:92%">
+                    <!-- Green hero sits at the top of the sheet -->
+                    <div class="p2-hero" style="border-radius:22px 22px 0 0;padding:14px 18px 18px">
+                        <!-- Back button row -->
+                        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:10px">
+                            <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="closeModal('modal-detail')">
+                                <div style="width:28px;height:28px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">←</div>
+                                <span style="font-size:11px;color:rgba(255,255,255,.8);font-weight:700">Back</span>
+                            </div>
+                            <div class="organic-badge" style="position:static">✓ Organic</div>
+                        </div>
+                        <div class="hero-emoji" id="detail-emoji" style="margin:4px 0 8px">🥕</div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="p2-name" id="detail-name">Organic Carrots</div>
+                        <div class="p2-farm" id="detail-farm">by Sok Farm · Kampong Speu</div>
+                        <div class="star-row"><span class="stars">★★★★★</span><span class="rating-text">4.9 (23 reviews)</span></div>
+                        <div class="price-row"><span class="big-price" id="detail-price">$0.80</span><span class="price-unit">/ kg</span></div>
+                        <div class="stock-text">12 kg available</div>
+                        <div class="divider"></div>
+                        <div class="about-title">About this product</div>
+                        <div class="about-text">Freshly harvested this morning. Grown without pesticides in Kampong Speu province. Ideal for soups and stir-fry.</div>
+                        <div class="qty-row">
+                            <span class="qty-label">Quantity (kg)</span>
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                                <div class="qty-val" id="qty-display">2</div>
+                                <button class="qty-btn" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="addToCart()">🛒 Add to Cart — $<span id="cart-price">1.60</span></button>
+                        <button class="btn-secondary" onclick="showToast('Message sent to seller! ✉')">✉ Message Seller</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════ SELLER DASHBOARD ══════════ -->
+            <div class="screen" id="pg-seller">
+                <div class="s-header">
+                    <div style="margin-bottom:2px;font-size:10px;color:rgba(255,255,255,.5)">Good morning,</div>
+                    <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;color:#fff;display:flex;align-items:center;justify-content:space-between">
+                        <span>Sok Chanthy 🌿</span>
+                        <div class="avatar" onclick="goToSellerProfile()">S</div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-val">$128</div><div class="stat-label">This month</div></div>
+                        <div class="stat-card"><div class="stat-val">7</div><div class="stat-label">New orders</div></div>
+                        <div class="stat-card"><div class="stat-val">4</div><div class="stat-label">Products listed</div></div>
+                        <div class="stat-card"><div class="stat-val">4.8 ★</div><div class="stat-label">Avg rating</div></div>
+                    </div>
+                </div>
+                <div class="scrollbody">
+                    <div class="action-btns">
+                        <button class="action-btn primary" onclick="openModal('modal-add-product')">＋ Add Product</button>
+                        <button class="action-btn secondary" onclick="openModal('modal-products')">📦 My Products</button>
+                        <button class="action-btn secondary" onclick="openModal('modal-orders')">📋 Orders</button>
+                    </div>
+                    <div class="section-title">Recent Orders</div>
+                    <div class="order-list">
+                        <div class="order-card"><div><div class="order-id">#ORD-0042</div><div class="order-meta">Carrots 3kg · Sophea</div></div><div class="status-badge sp">Pending</div></div>
+                        <div class="order-card"><div><div class="order-id">#ORD-0041</div><div class="order-meta">Corn 10pcs · Dara</div></div><div class="status-badge sc">Confirmed</div></div>
+                        <div class="order-card"><div><div class="order-id">#ORD-0040</div><div class="order-meta">Onion 2kg · Rina</div></div><div class="status-badge sd">Delivered</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════ CART ══════════ -->
+            <div class="screen" id="pg-cart">
+                <div class="s-header">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#fff;display:flex;align-items:center;gap:7px">
+                            🛒 My Cart
+                            <span style="background:var(--yellow);color:#1a1a00;font-size:10px;font-weight:900;padding:2px 8px;border-radius:20px" id="cart-badge">3 items</span>
+                        </div>
+                        <div onclick="openModal('modal-buyer-orders')" style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;gap:4px">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+                            My Orders
+                        </div>
+                    </div>
+                </div>
+                <div class="scrollbody">
+                    <div class="cart-items" id="cart-list"></div>
+                    <div class="order-summary">
+                        <div class="summary-row"><span>Subtotal</span><span id="sum-sub">$3.70</span></div>
+                        <div class="summary-row"><span>Delivery fee</span><span>$0.50</span></div>
+                        <div class="summary-row"><span>Platform fee (5%)</span><span id="sum-fee">$0.19</span></div>
+                        <div class="summary-row total"><span>Total</span><span id="sum-total">$4.39</span></div>
+                    </div>
+                    <div class="payment-label">Payment Method</div>
+                    <div class="payment-options">
+                        <button class="payment-opt selected" onclick="selectPayment(this)">🏦 ABA</button>
+                        <button class="payment-opt" onclick="selectPayment(this)">📱 Bakong</button>
+                        <button class="payment-opt" onclick="selectPayment(this)">💵 Cash</button>
+                    </div>
+                    <button class="btn-primary" onclick="placeOrder()">✓ Place Order</button>
+                </div>
+            </div>
+
+            <!-- ══════════ PROFILE ══════════ -->
+            <div class="screen" id="pg-profile">
+                <div class="profile-hero">
+                    <div class="profile-user-toggle">
+                        <button class="put-btn active" id="ptog-buyer" onclick="setProfile('buyer')">Buyer</button>
+                        <button class="put-btn"        id="ptog-seller" onclick="setProfile('seller')">Seller</button>
+                    </div>
+                    <div class="profile-avatar-wrap">
+                        <div class="profile-avatar" id="pf-avatar">K</div>
+                        <div class="edit-avatar" onclick="showToast('Photo picker opened 📷')">✏</div>
+                    </div>
+                    <div class="profile-name"    id="pf-name">Kosal Pich</div>
+                    <div class="profile-role"    id="pf-role">Buyer</div>
+                    <div class="profile-loc"     id="pf-loc">📍 Phnom Penh, Cambodia</div>
+                    <button class="edit-profile-btn" onclick="showToast('Edit profile opened ✏')">Edit Profile</button>
+                </div>
+                <div class="profile-body">
+
+                    <!-- Account Details (shared) -->
+                    <div class="profile-section">
+                        <div class="ps-title">👤 Account Details</div>
+                        <div class="ps-row"><span class="ps-row-label">✉ Email</span><span class="ps-row-val" id="pf-email">kosal@gmail.com</span></div>
+                        <div class="ps-row"><span class="ps-row-label">📞 Phone</span><span class="ps-row-val" id="pf-phone">+855 12 345 678</span></div>
+                        <div class="ps-row"><span class="ps-row-label">🛡 Verified</span><span class="ps-row-badge">✓ Verified</span></div>
+                    </div>
+
+                    <!-- BUYER SECTION -->
+                    <div id="pf-buyer">
+                        <div class="profile-section">
+                            <div class="ps-title">❤️ Saved Items</div>
+                            <div class="wish-item"><div class="wish-emoji">🥕</div><div class="wish-info"><div class="wish-name">Organic Carrots</div><div class="wish-farm">Sok Farm</div></div><div class="wish-heart" onclick="showToast('Removed ♥')">♥</div></div>
+                            <div class="wish-item"><div class="wish-emoji">🥬</div><div class="wish-info"><div class="wish-name">Morning Glory</div><div class="wish-farm">Srey Farm</div></div><div class="wish-heart" onclick="showToast('Removed ♥')">♥</div></div>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title" style="display:flex;align-items:center;justify-content:space-between">
+                                📦 Order History
+                                <span style="font-size:9.5px;color:var(--ga);font-weight:700;cursor:pointer" onclick="openModal('modal-buyer-orders')">View all →</span>
+                            </div>
+                            <div class="ps-row"><span class="ps-row-label">#ORD-0042 · Carrots 3kg</span><span style="font-size:9px;background:#fff3cd;color:#956e00;padding:2px 7px;border-radius:8px;font-weight:800">On the way</span></div>
+                            <div class="ps-row"><span class="ps-row-label">#ORD-0038 · Carrots 2kg</span><span style="font-size:9px;background:#d4edda;color:#1a5c2a;padding:2px 7px;border-radius:8px;font-weight:800">Delivered</span></div>
+                            <div class="ps-row"><span class="ps-row-label">#ORD-0035 · Corn 5pcs</span><span style="font-size:9px;background:#d4edda;color:#1a5c2a;padding:2px 7px;border-radius:8px;font-weight:800">Delivered</span></div>
+                            <button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:10px" onclick="openModal('modal-buyer-orders')">📋 Track My Orders</button>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title">💳 Payment Methods</div>
+                            <div class="ps-row"><span class="ps-row-label">🏦 ABA Bank</span><span class="ps-row-badge">Default</span></div>
+                            <div class="ps-row"><span class="ps-row-label">📱 Bakong</span><span style="font-size:9.5px;color:var(--ga);cursor:pointer">+ Add</span></div>
+                            <div class="ps-row"><span class="ps-row-label">📍 Delivery Address</span><span style="font-size:9.5px;color:var(--g400)">Toul Kork, PP</span></div>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title">⭐ My Reviews</div>
+                            <div class="ps-row"><span class="ps-row-label">Sok Farm — Carrots</span><span style="color:var(--yellow);font-size:10px">★★★★★</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Meas Farm — Corn</span><span style="color:var(--yellow);font-size:10px">★★★★☆</span></div>
+                        </div>
+                    </div>
+
+                    <!-- SELLER SECTION -->
+                    <div id="pf-seller" style="display:none">
+                        <div class="profile-section">
+                            <div class="ps-title">🌾 Business Info</div>
+                            <div class="ps-row"><span class="ps-row-label">Farm Name</span><span class="ps-row-val">Sok Farm</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Produce Type</span><span class="ps-row-val">Vegetables</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Province</span><span class="ps-row-val">Kampong Speu</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Certification</span><span class="ps-row-badge">✓ Organic</span></div>
+                            <div style="font-size:10px;color:var(--g600);margin-top:8px;line-height:1.6">Family farm in Kampong Speu. Pesticide-free vegetables for over 15 years.</div>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title">💰 Earnings</div>
+                            <div class="earnings-grid">
+                                <div class="earn-card"><div class="earn-val">$32</div><div class="earn-label">This week</div></div>
+                                <div class="earn-card"><div class="earn-val">$128</div><div class="earn-label">This month</div></div>
+                                <div class="earn-card"><div class="earn-val">$1.4k</div><div class="earn-label">This year</div></div>
+                            </div>
+                            <div class="ps-row"><span class="ps-row-label">⭐ Avg Rating</span><span class="ps-row-val">4.8 / 5</span></div>
+                            <div class="ps-row"><span class="ps-row-label">🛒 Total Orders</span><span class="ps-row-val">142</span></div>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title">📦 Product Management</div>
+                            <div class="ps-row"><span class="ps-row-label">Active Listings</span><span class="ps-row-val">4 products</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Low Stock Alerts</span><span style="font-size:9.5px;background:#fff3cd;color:#956e00;padding:2px 8px;border-radius:10px;font-weight:800">1 item</span></div>
+                            <div style="display:flex;gap:7px;margin-top:10px">
+                                <button class="action-btn secondary" style="font-size:10px" onclick="openModal('modal-products')">📦 Products</button>
+                                <button class="action-btn secondary" style="font-size:10px" onclick="openModal('modal-orders')">📋 Orders</button>
+                                <button class="action-btn primary" style="font-size:10px" onclick="openModal('modal-add-product')">＋ Add</button>
+                            </div>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title">📣 Promotions & Analytics</div>
+                            <div class="ps-row"><span class="ps-row-label">Active Discount</span><span class="ps-row-val">10% on Carrots</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Featured Product</span><span style="font-size:9.5px;color:var(--ga);cursor:pointer" onclick="showToast('Set featured product')">Set now</span></div>
+                            <div class="ps-row"><span class="ps-row-label">📊 Views this week</span><span class="ps-row-val">238</span></div>
+                            <div class="ps-row"><span class="ps-row-label">🖱 Clicks</span><span class="ps-row-val">64</span></div>
+                        </div>
+                        <div class="profile-section">
+                            <div class="ps-title">⭐ Ratings & Reviews</div>
+                            <div class="ps-row"><span class="ps-row-label">Sophea — Carrots</span><span style="color:var(--yellow);font-size:10px">★★★★★</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Dara — Corn</span><span style="color:var(--yellow);font-size:10px">★★★★☆</span></div>
+                            <div class="ps-row"><span class="ps-row-label">Rina — Onion</span><span style="color:var(--yellow);font-size:10px">★★★★★</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Settings (shared) -->
+                    <div class="profile-section">
+                        <div class="ps-title">⚙️ Settings</div>
+                        <div class="ps-row"><span class="ps-row-label">🔔 App Notifications</span><div class="toggle-sm" onclick="this.classList.toggle('off')"></div></div>
+                        <div class="ps-row"><span class="ps-row-label">📱 SMS Alerts</span><div class="toggle-sm off" onclick="this.classList.toggle('off')"></div></div>
+                        <div class="ps-row"><span class="ps-row-label">🌐 Language</span><span class="ps-row-val">English</span></div>
+                        <div style="margin-top:8px">
+                            <div style="font-size:10px;font-weight:700;color:var(--g600);margin-bottom:6px">Linked Accounts</div>
+                            <div class="linked-accounts">
+                                <div class="linked-acc connected">Google</div>
+                                <div class="linked-acc" onclick="showToast('Connect Apple ID')">Apple</div>
+                                <div class="linked-acc" onclick="showToast('Connect Facebook')">Facebook</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-section">
+                        <div class="action-row" onclick="showToast('Opening Help...')"><div class="action-row-icon" style="background:#f0f9ff">❓</div><div class="action-row-label">Help / Support</div><div class="action-row-arrow">›</div></div>
+                        <div class="action-row" onclick="showToast('Opening Terms...')"><div class="action-row-icon" style="background:#f5f5ff">📄</div><div class="action-row-label">Terms & Privacy Policy</div><div class="action-row-arrow">›</div></div>
+                        <div class="action-row" onclick="showToast('Invite link copied! 🎉')"><div class="action-row-icon" style="background:#fff5e8">🎁</div><div class="action-row-label">Invite Friends</div><div class="action-row-arrow">›</div></div>
+                        <div class="action-row danger" onclick="showToast('Logged out 👋')"><div class="action-row-icon" style="background:#ffeaea">🚪</div><div class="action-row-label">Log Out</div></div>
+                        <div style="text-align:center;margin-top:8px;font-size:9px;color:var(--g400)">Psar Kaksekor v1.0.0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ MODALS (inside tab-area so they overlay screens) ══ -->
+
+            <!-- MODAL: MY PRODUCTS -->
+            <div class="modal-overlay" id="modal-products" onclick="closeModal('modal-products',event)">
+                <div class="modal-sheet">
+                    <div class="modal-handle"></div>
+                    <div class="modal-header">
+                        <div class="modal-title">📦 My Products</div>
+                        <div class="modal-close" onclick="closeModal('modal-products')">✕</div>
+                    </div>
+                    <div class="modal-body">
+                        <button class="btn-primary" style="margin-bottom:12px" onclick="closeModal('modal-products');openModal('modal-add-product')">＋ Add New Product</button>
+                        <div class="product-row"><div class="pr-emoji" style="background:#fff5e8">🥕</div><div class="pr-info"><div class="pr-name">Organic Carrots</div><div class="pr-meta">$0.80/kg · 12kg left <span class="stock-dot stock-ok"></span></div></div><div class="pr-actions"><button class="pr-btn edit" onclick="showToast('Editing...')">Edit</button><button class="pr-btn del" onclick="showToast('Deleted ✕')">Del</button></div></div>
+                        <div class="product-row"><div class="pr-emoji" style="background:#fffde8">🌽</div><div class="pr-info"><div class="pr-name">Sweet Corn</div><div class="pr-meta">$0.30/pc · 8pcs left <span class="stock-dot stock-low"></span></div></div><div class="pr-actions"><button class="pr-btn edit" onclick="showToast('Editing...')">Edit</button><button class="pr-btn del" onclick="showToast('Deleted ✕')">Del</button></div></div>
+                        <div class="product-row"><div class="pr-emoji" style="background:#f0fff4">🥬</div><div class="pr-info"><div class="pr-name">Morning Glory</div><div class="pr-meta">$0.60/kg · 0kg left <span class="stock-dot stock-out"></span></div></div><div class="pr-actions"><button class="pr-btn edit" onclick="showToast('Editing...')">Edit</button><button class="pr-btn del" onclick="showToast('Deleted ✕')">Del</button></div></div>
+                        <div class="product-row"><div class="pr-emoji" style="background:#fff0f0">🧅</div><div class="pr-info"><div class="pr-name">Red Onion</div><div class="pr-meta">$1.20/kg · 25kg left <span class="stock-dot stock-ok"></span></div></div><div class="pr-actions"><button class="pr-btn edit" onclick="showToast('Editing...')">Edit</button><button class="pr-btn del" onclick="showToast('Deleted ✕')">Del</button></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: ADD PRODUCT -->
+            <div class="modal-overlay" id="modal-add-product" onclick="closeModal('modal-add-product',event)">
+                <div class="modal-sheet">
+                    <div class="modal-handle"></div>
+                    <div class="modal-header">
+                        <div class="modal-title">＋ Add New Product</div>
+                        <div class="modal-close" onclick="closeModal('modal-add-product')">✕</div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="form-label">Product Name *</label><input class="form-input" type="text" placeholder="e.g. Organic Carrots" id="f-name"></div>
+                        <div class="form-group"><label class="form-label">Category *</label><select class="form-select" id="f-cat"><option value="">Select category...</option><option>🥦 Vegetables</option><option>🌾 Grains & Rice</option><option>🍎 Fruits</option><option>🌿 Herbs</option><option>🥚 Eggs & Dairy</option></select></div>
+                        <div class="form-row">
+                            <div class="form-group"><label class="form-label">Price ($) *</label><input class="form-input" type="number" placeholder="0.00" id="f-price"></div>
+                            <div class="form-group"><label class="form-label">Unit *</label><select class="form-select" id="f-unit"><option>per kg</option><option>per piece</option><option>per bunch</option><option>per bag</option></select></div>
+                        </div>
+                        <div class="form-group"><label class="form-label">Stock Available *</label><input class="form-input" type="number" placeholder="e.g. 20" id="f-stock"></div>
+                        <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" rows="3" placeholder="Tell buyers about your product..." style="resize:none;line-height:1.5" id="f-desc"></textarea></div>
+                        <div class="form-group">
+                            <label class="form-label">Certifications</label>
+                            <div style="display:flex;gap:7px;flex-wrap:wrap">
+                                <button class="chip active" onclick="this.classList.toggle('active')">✓ Organic</button>
+                                <button class="chip" onclick="this.classList.toggle('active')">No Pesticide</button>
+                                <button class="chip" onclick="this.classList.toggle('active')">Local Farm</button>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="form-label">Product Photo</label><div class="img-upload" onclick="showToast('Camera opened 📷')">📷 <span>Tap to add photo</span></div></div>
+                        <button class="btn-primary" onclick="submitProduct()">✓ Submit Product</button>
+                        <button class="btn-secondary" onclick="closeModal('modal-add-product')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: SELLER ORDERS (with tracker) -->
+            <div class="modal-overlay" id="modal-orders" onclick="closeModal('modal-orders',event)">
+                <div class="modal-sheet">
+                    <div class="modal-handle"></div>
+                    <div class="modal-header">
+                        <div class="modal-title">📋 Manage Orders</div>
+                        <div class="modal-close" onclick="closeModal('modal-orders')">✕</div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="order-view-tabs">
+                            <button class="ovtab active" onclick="filterSellerOrders('all',this)">All (6)</button>
+                            <button class="ovtab" onclick="filterSellerOrders('pending',this)">Pending (2)</button>
+                            <button class="ovtab" onclick="filterSellerOrders('confirmed',this)">Confirmed (1)</button>
+                            <button class="ovtab" onclick="filterSellerOrders('shipping',this)">On the Way (1)</button>
+                            <button class="ovtab" onclick="filterSellerOrders('delivered',this)">Delivered (2)</button>
+                        </div>
+                        <div id="seller-orders-list">
+
+                            <div class="tracker-card" data-sstatus="pending">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0043</div><div class="tc-date">Today · 09:14 AM</div></div><div class="status-badge sp">Pending</div></div>
+                                <div class="tc-items">🥬 Morning Glory 2kg · Vanny · BKK1</div>
+                                <div class="tc-total">Total: $1.20</div>
+                                <div class="progress-track" id="st-0043">
+                                    <div class="progress-fill" style="width:0%"></div>
+                                    <div class="prog-step"><div class="prog-dot active">📋</div><div class="prog-label active">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot">✅</div><div class="prog-label">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot">🚚</div><div class="prog-label">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot">📦</div><div class="prog-label">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="advanceSellerOrder(this,'st-0043','ORD-0043')">✓ Confirm Order</button>
+                                    <button class="tc-btn red" onclick="showToast('Order cancelled')">✕ Cancel</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-sstatus="pending">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0042</div><div class="tc-date">Today · 08:30 AM</div></div><div class="status-badge sp">Pending</div></div>
+                                <div class="tc-items">🥕 Carrots 3kg · Sophea · Toul Kork</div>
+                                <div class="tc-total">Total: $2.40</div>
+                                <div class="progress-track" id="st-0042">
+                                    <div class="progress-fill" style="width:0%"></div>
+                                    <div class="prog-step"><div class="prog-dot active">📋</div><div class="prog-label active">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot">✅</div><div class="prog-label">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot">🚚</div><div class="prog-label">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot">📦</div><div class="prog-label">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="advanceSellerOrder(this,'st-0042','ORD-0042')">✓ Confirm Order</button>
+                                    <button class="tc-btn red" onclick="showToast('Order cancelled')">✕ Cancel</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-sstatus="confirmed">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0041</div><div class="tc-date">Yesterday · 03:20 PM</div></div><div class="status-badge sc">Confirmed</div></div>
+                                <div class="tc-items">🌽 Corn 10pcs · Dara · Daun Penh</div>
+                                <div class="tc-total">Total: $3.00</div>
+                                <div class="progress-track" id="st-0041">
+                                    <div class="progress-fill" style="width:33%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot active">✅</div><div class="prog-label active">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot">🚚</div><div class="prog-label">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot">📦</div><div class="prog-label">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="advanceSellerOrder(this,'st-0041','ORD-0041')">🚚 Mark as Shipped</button>
+                                    <button class="tc-btn ghost" onclick="showToast('Message sent to buyer')">✉ Message</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-sstatus="shipping">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0040</div><div class="tc-date">2 days ago</div></div><div class="status-badge" style="background:#dbeafe;color:var(--blue)">On the Way</div></div>
+                                <div class="tc-items">🧅 Onion 2kg · Rina · Sen Sok</div>
+                                <div class="tc-total">Total: $2.40</div>
+                                <div class="progress-track" id="st-0040">
+                                    <div class="progress-fill" style="width:66%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot active">🚚</div><div class="prog-label active">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot">📦</div><div class="prog-label">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="advanceSellerOrder(this,'st-0040','ORD-0040')">📦 Mark Delivered</button>
+                                    <button class="tc-btn ghost" onclick="showToast('Message sent to buyer')">✉ Message</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-sstatus="delivered">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0039</div><div class="tc-date">3 days ago</div></div><div class="status-badge sd">Delivered</div></div>
+                                <div class="tc-items">🥕 Carrots 5kg · Menghour · Meanchey</div>
+                                <div class="tc-total">Total: $4.00</div>
+                                <div class="progress-track" id="st-0039">
+                                    <div class="progress-fill" style="width:100%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn ghost" onclick="showToast('Reorder initiated')">↻ Restock</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-sstatus="delivered">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0038</div><div class="tc-date">5 days ago</div></div><div class="status-badge sd">Delivered</div></div>
+                                <div class="tc-items">🌽 Corn 20pcs · Kosal · Toul Kork</div>
+                                <div class="tc-total">Total: $6.00</div>
+                                <div class="progress-track" id="st-0038">
+                                    <div class="progress-fill" style="width:100%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Delivered</div></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: BUYER ORDERS -->
+            <div class="modal-overlay" id="modal-buyer-orders" onclick="closeModal('modal-buyer-orders',event)">
+                <div class="modal-sheet">
+                    <div class="modal-handle"></div>
+                    <div class="modal-header">
+                        <div class="modal-title">📦 My Orders</div>
+                        <div class="modal-close" onclick="closeModal('modal-buyer-orders')">✕</div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="order-view-tabs">
+                            <button class="ovtab active" onclick="filterBuyerOrders('all',this)">All (5)</button>
+                            <button class="ovtab" onclick="filterBuyerOrders('active',this)">Active (2)</button>
+                            <button class="ovtab" onclick="filterBuyerOrders('delivered',this)">Delivered (3)</button>
+                        </div>
+                        <div id="buyer-orders-list">
+
+                            <div class="tracker-card" data-bstatus="active">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0042</div><div class="tc-date">Today · Sok Farm</div></div><div class="status-badge" style="background:#dbeafe;color:var(--blue)">On the Way</div></div>
+                                <div class="tc-items">🥕 Organic Carrots 3kg</div>
+                                <div class="tc-total">Total: $2.40</div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:66%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot active">🚚</div><div class="prog-label active">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot">📦</div><div class="prog-label">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn ghost" onclick="showToast('Contacting seller...')">✉ Contact Seller</button>
+                                    <button class="tc-btn ghost" onclick="showToast('Order details copied')">📋 Details</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-bstatus="active">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0041</div><div class="tc-date">Yesterday · Meas Farm</div></div><div class="status-badge sc">Confirmed</div></div>
+                                <div class="tc-items">🌽 Sweet Corn 5pcs · 🥬 Morning Glory 1kg</div>
+                                <div class="tc-total">Total: $2.10</div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:33%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot active">✅</div><div class="prog-label active">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot">🚚</div><div class="prog-label">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot">📦</div><div class="prog-label">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn ghost" onclick="showToast('Contacting seller...')">✉ Contact Seller</button>
+                                    <button class="tc-btn red" onclick="showToast('Cancellation requested')">✕ Cancel</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-bstatus="delivered">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0038</div><div class="tc-date">3 days ago · Sok Farm</div></div><div class="status-badge sd">Delivered</div></div>
+                                <div class="tc-items">🥕 Organic Carrots 2kg</div>
+                                <div class="tc-total">Total: $1.60</div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:100%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="showToast('Reordering...')">↻ Reorder</button>
+                                    <button class="tc-btn ghost" onclick="showToast('Review form opened')">⭐ Review</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-bstatus="delivered">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0035</div><div class="tc-date">5 days ago · Meas Farm</div></div><div class="status-badge sd">Delivered</div></div>
+                                <div class="tc-items">🌽 Sweet Corn 5pcs</div>
+                                <div class="tc-total">Total: $1.50</div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:100%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="showToast('Reordering...')">↻ Reorder</button>
+                                    <button class="tc-btn ghost" onclick="showToast('Review form opened')">⭐ Review</button>
+                                </div>
+                            </div>
+
+                            <div class="tracker-card" data-bstatus="delivered">
+                                <div class="tc-top"><div><div class="tc-id">#ORD-0031</div><div class="tc-date">1 week ago · Dara Farm</div></div><div class="status-badge sd">Delivered</div></div>
+                                <div class="tc-items">🧅 Red Onion 1kg</div>
+                                <div class="tc-total">Total: $1.20</div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:100%"></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Ordered</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Confirmed</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">On the Way</div></div>
+                                    <div class="prog-step"><div class="prog-dot done">✓</div><div class="prog-label done">Delivered</div></div>
+                                </div>
+                                <div class="tc-action-row">
+                                    <button class="tc-btn primary" onclick="showToast('Reordering...')">↻ Reorder</button>
+                                    <button class="tc-btn ghost" onclick="showToast('Review form opened')">⭐ Review</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /tab-area -->
+
+        <!-- ══ SHARED BOTTOM NAV ══ -->
+        <div class="bottom-nav" id="shared-nav">
+            <div class="nav-item active" id="nav-home" onclick="goTo('pg-home')">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home
+            </div>
+            <div class="nav-item" id="nav-browse" onclick="goTo('pg-browse')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Browse
+            </div>
+            <div class="nav-item" id="nav-cart" onclick="goTo('pg-cart')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span id="nav-cart-badge" class="nav-badge" style="display:none">3</span>
+                Cart
+            </div>
+            <div class="nav-item" id="nav-profile" onclick="goTo('pg-profile')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
+            </div>
+        </div>
+
+    </div><!-- /phone-screen -->
+</div><!-- /phone-shell -->
+
+<div class="page-label" id="page-label">
+    <div class="page-label-title">Home / Browse</div>
+    <div class="page-label-desc">Shared bottom nav — always visible</div>
+</div>
+
+<script>
+    // ── All tabs & their nav IDs ──
+    const TAB_NAV = {
+      'pg-home':'nav-home','pg-browse':'nav-browse',
+      'pg-seller':null,'pg-cart':'nav-cart','pg-profile':'nav-profile'
+    };
+    const SELLER_SCREENS = new Set(['pg-seller']);
+
+    const PAGE_LABELS = {
+      'pg-home':   {t:'Home / Browse',    d:'Filter by category, tap product to view details'},
+      'pg-browse': {t:'Browse',           d:'Trending farms & products, or search'},
+      'pg-seller': {t:'Seller Dashboard', d:'Revenue overview, quick actions'},
+      'pg-cart':   {t:'Cart & Checkout',  d:'Swipe items left to delete'},
+      'pg-profile':{t:'Profile',          d:'Toggle between Buyer and Seller view'},
+    };
+
+    // Seller bottom nav (replaces shared nav on seller screen)
+    const sellerNavHTML = `
+      <div class="nav-item active" onclick="goTo('pg-seller')"><svg viewBox="0 0 24 24" fill="currentColor" width="19" height="19"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dash</div>
+      <div class="nav-item" onclick="openModal('modal-products')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Products</div>
+      <div class="nav-item" onclick="openModal('modal-orders')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>Orders</div>
+      <div class="nav-item" onclick="goToSellerProfile()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+    `;
+    const buyerNavHTML = document.getElementById('shared-nav').innerHTML;
+
+    function goTo(id) {
+      // hide all screens
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const next = document.getElementById(id);
+      next.classList.add('active');
+
+      // swap nav if entering/leaving seller
+      const nav = document.getElementById('shared-nav');
+      if (SELLER_SCREENS.has(id)) {
+        nav.innerHTML = sellerNavHTML;
+      } else {
+        nav.innerHTML = buyerNavHTML;
+        // re-attach event listeners lost via innerHTML (they're inline so fine)
+        // highlight correct nav item
+        document.querySelectorAll('#shared-nav .nav-item').forEach(n => n.classList.remove('active'));
+        const navId = TAB_NAV[id];
+        if (navId) {
+          const el = document.getElementById(navId);
+          if (el) el.classList.add('active');
+        }
+      }
+
+      // page tabs (above phone)
+      document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+      const tabOrder = ['pg-home','pg-browse','pg-seller','pg-cart','pg-profile'];
+      const ti = tabOrder.indexOf(id);
+      if (ti >= 0) document.querySelectorAll('.page-tab')[ti].classList.add('active');
+
+      const lbl = PAGE_LABELS[id] || {t:id, d:''};
+      document.querySelector('.page-label-title').textContent = lbl.t;
+      document.querySelector('.page-label-desc').textContent = lbl.d;
+    }
+
+    function goToSellerProfile() {
+      setProfile('seller');
+      goTo('pg-profile');
+    }
+
+    // ── Modal Sheets ──
+    function openModal(id) {
+      const o = document.getElementById(id);
+      o.classList.remove('closing');
+      o.style.display = 'flex';
+      // force reflow so open animation fires fresh
+      void o.offsetWidth;
+      o.classList.add('open');
+    }
+    function closeModal(id, event) {
+      if (event && event.target !== document.getElementById(id)) return;
+      const o = document.getElementById(id);
+      o.classList.add('closing');
+      // after slide-down animation completes, fully hide
+      setTimeout(() => {
+        o.classList.remove('open', 'closing');
+        o.style.display = 'none';
+      }, 290);
+    }
+
+    // ── Product Data & Home Filter ──
+    const allProducts = [
+      {name:'Organic Carrots',farm:'Sok Farm · 12kg',price:'$0.80/kg',emoji:'🥕',bg:'#fff5e8',cat:'veg'},
+      {name:'Sweet Corn',farm:'Meas Farm · 40pcs',price:'$0.30/pc',emoji:'🌽',bg:'#fffde8',cat:'veg'},
+      {name:'Red Onion',farm:'Dara Farm · 25kg',price:'$1.20/kg',emoji:'🧅',bg:'#fff0f0',cat:'veg'},
+      {name:'Morning Glory',farm:'Srey Farm · 18kg',price:'$0.60/kg',emoji:'🥬',bg:'#f0fff4',cat:'veg'},
+      {name:'Jasmine Rice',farm:'Meas Farm · 50kg',price:'$1.20/kg',emoji:'🌾',bg:'#fffde8',cat:'grain'},
+      {name:'Brown Rice',farm:'Sok Farm · 30kg',price:'$1.50/kg',emoji:'🍚',bg:'#fff8e8',cat:'grain'},
+      {name:'Mango',farm:'Chan Farm · 20kg',price:'$1.00/kg',emoji:'🥭',bg:'#fff5e0',cat:'fruit'},
+      {name:'Banana',farm:'Ros Farm · 15 bunches',price:'$0.80/bunch',emoji:'🍌',bg:'#fffde0',cat:'fruit'},
+    ];
+    function renderHomeGrid(cat) {
+      const filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.cat === cat);
+      document.getElementById('home-grid').innerHTML = filtered.map(p =>
+        `<div class="product-card" onclick="openDetail('${p.emoji}','${p.name}','${p.farm}','${p.price}')">
+          <div class="product-img" style="background:${p.bg}">${p.emoji}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-farm">${p.farm}</div>
+          <div class="product-price">${p.price}</div>
+        </div>`).join('');
+    }
+    renderHomeGrid('all');
+    function filterHome(cat, btn) {
+      document.querySelectorAll('#pg-home .chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderHomeGrid(cat);
+    }
+
+    // ── Product Detail ──
+    let qty = 2;
+    function openDetail(emoji, name, farm, price) {
+      document.getElementById('detail-emoji').textContent = emoji;
+      document.getElementById('detail-name').textContent = name;
+      document.getElementById('detail-farm').textContent = 'by ' + farm;
+      const p = parseFloat(price.replace('$',''));
+      document.getElementById('detail-price').textContent = '$' + p.toFixed(2);
+      qty = 2;
+      document.getElementById('qty-display').textContent = qty;
+      document.getElementById('cart-price').textContent = (qty * p).toFixed(2);
+      window._detailPrice = p;
+      openModal('modal-detail');
+    }
+    function changeQty(d) {
+      qty = Math.max(1, Math.min(12, qty + d));
+      document.getElementById('qty-display').textContent = qty;
+      const p = window._detailPrice || 0.80;
+      document.getElementById('cart-price').textContent = (qty * p).toFixed(2);
+    }
+
+    // ── Cart ──
+    let cartItems = [
+      {name:'Organic Carrots',sub:'2 kg × $0.80',price:1.60,emoji:'🥕'},
+      {name:'Sweet Corn',     sub:'5 pcs × $0.30',price:1.50,emoji:'🌽'},
+      {name:'Morning Glory',  sub:'1 kg × $0.60',price:0.60,emoji:'🥬'},
+    ];
+    function renderCart() {
+      document.getElementById('cart-list').innerHTML = cartItems.map((item, i) => `
+        <div class="cart-item-wrap" id="wrap-${i}">
+          <div class="delete-reveal" onclick="deleteCartItem(${i})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </div>
+          <div class="cart-item" id="ci-${i}" data-idx="${i}">
+            <div class="cart-emoji">${item.emoji}</div>
+            <div class="cart-info"><div class="cart-name">${item.name}</div><div class="cart-sub">${item.sub}</div></div>
+            <div class="cart-price">$${item.price.toFixed(2)}</div>
+          </div>
+        </div>`).join('');
+      updateCartTotals();
+      const count = cartItems.length;
+      document.getElementById('cart-badge').textContent = count + ' item' + (count !== 1 ? 's' : '');
+      const badge = document.getElementById('nav-cart-badge');
+      if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+      initSwipe();
+    }
+    function updateCartTotals() {
+      const sub = cartItems.reduce((a, b) => a + b.price, 0);
+      const fee = sub * 0.05;
+      document.getElementById('sum-sub').textContent = '$' + sub.toFixed(2);
+      document.getElementById('sum-fee').textContent = '$' + fee.toFixed(2);
+      document.getElementById('sum-total').textContent = '$' + (sub + 0.50 + fee).toFixed(2);
+    }
+    function deleteCartItem(i) {
+      cartItems.splice(i, 1);
+      renderCart();
+      showToast('Item removed 🗑');
+    }
+    function addToCart() {
+      const name = document.getElementById('detail-name').textContent;
+      const emoji = document.getElementById('detail-emoji').textContent;
+      const p = window._detailPrice || 0.80;
+      cartItems.push({name, sub:`${qty} kg × $${p.toFixed(2)}`, price: qty * p, emoji});
+      renderCart();
+      showToast(`Added ${qty}kg to cart! ${emoji}`);
+      closeModal('modal-detail');
+      setTimeout(() => goTo('pg-cart'), 400);
+    }
+    function selectPayment(el) {
+      document.querySelectorAll('.payment-opt').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+    function placeOrder() {
+      if (!cartItems.length) { showToast('Cart is empty!'); return; }
+      cartItems = [];
+      renderCart();
+      showToast('Order placed! 🎉 Thank you!');
+    }
+
+    // Swipe to delete
+    function initSwipe() {
+      document.querySelectorAll('.cart-item').forEach(el => {
+        let startX = 0, dragging = false;
+        el.addEventListener('mousedown', e => { startX = e.clientX; dragging = true; });
+        window.addEventListener('mousemove', e => {
+          if (!dragging) return;
+          const dx = e.clientX - startX;
+          if (dx < 0) el.style.transform = `translateX(${Math.max(dx, -70)}px)`;
+        });
+        window.addEventListener('mouseup', e => {
+          if (!dragging) return; dragging = false;
+          el.style.transform = (e.clientX - startX) < -40 ? 'translateX(-70px)' : '';
+        });
+        el.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+        el.addEventListener('touchmove', e => {
+          const dx = e.touches[0].clientX - startX;
+          if (dx < 0) el.style.transform = `translateX(${Math.max(dx,-70)}px)`;
+        }, {passive:true});
+        el.addEventListener('touchend', e => {
+          el.style.transform = (e.changedTouches[0].clientX - startX) < -40 ? 'translateX(-70px)' : '';
+        });
+      });
+    }
+    renderCart();
+
+    // ── Browse search ──
+    const searchData = [
+      {name:'Organic Carrots',farm:'Sok Farm',price:'$0.80/kg',emoji:'🥕',bg:'#fff5e8'},
+      {name:'Sweet Corn',farm:'Meas Farm',price:'$0.30/pc',emoji:'🌽',bg:'#fffde8'},
+      {name:'Morning Glory',farm:'Srey Farm',price:'$0.60/kg',emoji:'🥬',bg:'#f0fff4'},
+      {name:'Red Onion',farm:'Dara Farm',price:'$1.20/kg',emoji:'🧅',bg:'#fff0f0'},
+      {name:'Jasmine Rice',farm:'Meas Farm',price:'$1.20/kg',emoji:'🌾',bg:'#fffde8'},
+      {name:'Brown Rice',farm:'Sok Farm',price:'$1.50/kg',emoji:'🍚',bg:'#fff8e8'},
+      {name:'Mango',farm:'Chan Farm',price:'$1.00/kg',emoji:'🥭',bg:'#fff5e0'},
+      {name:'Banana',farm:'Ros Farm',price:'$0.80/bunch',emoji:'🍌',bg:'#fffde0'},
+      {name:'Fresh Tomatoes',farm:'Chan Farm',price:'$0.90/kg',emoji:'🍅',bg:'#fff0f5'},
+      {name:'Long Bean',farm:'Vanny Farm',price:'$0.70/kg',emoji:'🫘',bg:'#f0fff0'},
+      {name:'Pumpkin',farm:'Dara Farm',price:'$0.50/kg',emoji:'🎃',bg:'#fff5e0'},
+    ];
+    function handleSearch(val) {
+      const def = document.getElementById('browse-default');
+      const res = document.getElementById('browse-results');
+      if (!val.trim()) { def.style.display = ''; res.classList.remove('visible'); return; }
+      def.style.display = 'none';
+      const q = val.toLowerCase();
+      const matches = searchData.filter(p => p.name.toLowerCase().includes(q) || p.farm.toLowerCase().includes(q));
+      res.innerHTML = matches.length
+        ? matches.map(p => `<div class="search-result-item" onclick="openDetail('${p.emoji}','${p.name}','${p.farm}','${p.price}')"><div class="sri-emoji" style="background:${p.bg}">${p.emoji}</div><div><div class="sri-name">${p.name}</div><div class="sri-meta">${p.farm}</div></div><div class="sri-price">${p.price}</div></div>`).join('')
+        : `<div class="no-results">😕 No results for "${val}"</div>`;
+      res.classList.add('visible');
+    }
+
+    // ── Profile toggle (Buyer / Seller) ──
+    function setProfile(mode) {
+      const isSeller = mode === 'seller';
+      document.getElementById('ptog-buyer').classList.toggle('active', !isSeller);
+      document.getElementById('ptog-seller').classList.toggle('active', isSeller);
+      document.getElementById('pf-buyer').style.display  = isSeller ? 'none' : '';
+      document.getElementById('pf-seller').style.display = isSeller ? '' : 'none';
+      document.getElementById('pf-avatar').textContent = isSeller ? 'S' : 'K';
+      document.getElementById('pf-name').textContent   = isSeller ? 'Sok Chanthy' : 'Kosal Pich';
+      document.getElementById('pf-role').textContent   = isSeller ? 'Seller / Farmer' : 'Buyer';
+      document.getElementById('pf-email').textContent  = isSeller ? 'chanthy@sokfarm.kh' : 'kosal@gmail.com';
+      document.getElementById('pf-phone').textContent  = isSeller ? '+855 17 987 654' : '+855 12 345 678';
+      document.getElementById('pf-loc').textContent    = isSeller ? '📍 Kampong Speu' : '📍 Phnom Penh, Cambodia';
+    }
+
+    // ── Seller Orders filter + advance ──
+    function filterSellerOrders(status, btn) {
+      document.querySelectorAll('#modal-orders .ovtab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#seller-orders-list .tracker-card').forEach(card => {
+        card.style.display = (status === 'all' || card.dataset.sstatus === status) ? '' : 'none';
+      });
+    }
+
+    const sellerSteps = [
+      { label:'Ordered', icon:'📋' },
+      { label:'Confirmed', icon:'✅' },
+      { label:'On the Way', icon:'🚚' },
+      { label:'Delivered', icon:'📦' },
+    ];
+    const sellerOrderState = {}; // trackId -> current step index (0-based active)
+
+    function advanceSellerOrder(btn, trackId, orderId) {
+      if (!(trackId in sellerOrderState)) {
+        // detect current active step from DOM
+        const track = document.getElementById(trackId);
+        const dots = track.querySelectorAll('.prog-dot');
+        let cur = 0;
+        dots.forEach((d, i) => { if (d.classList.contains('active')) cur = i; });
+        sellerOrderState[trackId] = cur;
+      }
+      const cur = sellerOrderState[trackId];
+      const next = cur + 1;
+      if (next >= sellerSteps.length) return;
+      sellerOrderState[trackId] = next;
+
+      // update DOM
+      const track = document.getElementById(trackId);
+      const dots = track.querySelectorAll('.prog-dot');
+      const labels = track.querySelectorAll('.prog-label');
+      const fill = track.querySelector('.progress-fill');
+
+      dots.forEach((d, i) => {
+        d.className = 'prog-dot';
+        if (i < next) { d.classList.add('done'); d.textContent = '✓'; }
+        else if (i === next) { d.classList.add('active'); d.textContent = sellerSteps[i].icon; }
+        else { d.textContent = sellerSteps[i].icon; }
+      });
+      labels.forEach((l, i) => {
+        l.className = 'prog-label';
+        if (i < next) l.classList.add('done');
+        else if (i === next) l.classList.add('active');
+      });
+      fill.style.width = (next / (sellerSteps.length - 1) * 100) + '%';
+
+      // update card status badge + button
+      const card = track.closest('.tracker-card');
+      const badge = card.querySelector('.status-badge');
+      const actionRow = card.querySelector('.tc-action-row');
+      const statusLabels = ['Pending','Confirmed','On the Way','Delivered'];
+      const statusClasses = ['sp','sc','shipping-badge','sd'];
+      const statusStyles = [
+        'background:#fff3cd;color:#956e00',
+        'background:#d4edda;color:#1a5c2a',
+        'background:#dbeafe;color:var(--blue)',
+        'background:var(--g100);color:var(--g600)'
+      ];
+      badge.textContent = statusLabels[next];
+      badge.style.cssText = statusStyles[next];
+      badge.className = 'status-badge';
+
+      const nextStatuses = ['pending','confirmed','shipping','delivered'];
+      card.dataset.sstatus = nextStatuses[next];
+
+      const msgs = ['','Confirmed! ✓','Marked as shipped 🚚','Delivered! 📦'];
+      showToast(msgs[next] + ' — #' + orderId);
+
+      // update action buttons
+      if (next === 1) {
+        actionRow.innerHTML = `<button class="tc-btn primary" onclick="advanceSellerOrder(this,'${trackId}','${orderId}')">🚚 Mark as Shipped</button><button class="tc-btn ghost" onclick="showToast('Message sent')">✉ Message</button>`;
+      } else if (next === 2) {
+        actionRow.innerHTML = `<button class="tc-btn primary" onclick="advanceSellerOrder(this,'${trackId}','${orderId}')">📦 Mark Delivered</button><button class="tc-btn ghost" onclick="showToast('Message sent')">✉ Message</button>`;
+      } else if (next === 3) {
+        actionRow.innerHTML = `<button class="tc-btn ghost" onclick="showToast('Restock initiated')">↻ Restock</button>`;
+      }
+    }
+
+    // ── Buyer Orders filter ──
+    function filterBuyerOrders(status, btn) {
+      document.querySelectorAll('#modal-buyer-orders .ovtab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#buyer-orders-list .tracker-card').forEach(card => {
+        card.style.display = (status === 'all' || card.dataset.bstatus === status) ? '' : 'none';
+      });
+    }
+
+    // ── Add Product form ──
+    function submitProduct() {
+      const name = document.getElementById('f-name').value.trim();
+      const cat  = document.getElementById('f-cat').value;
+      const price = document.getElementById('f-price').value;
+      if (!name || !cat || !price) { showToast('Please fill required fields ⚠'); return; }
+      showToast(`"${name}" listed successfully! 🌿`);
+      ['f-name','f-price','f-stock','f-desc'].forEach(id => document.getElementById(id).value = '');
+      setTimeout(() => closeModal('modal-add-product'), 900);
+    }
+
+    // ── Toast ──
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    // init
+    goTo('pg-home');
+</script>
+</body>
+</html>

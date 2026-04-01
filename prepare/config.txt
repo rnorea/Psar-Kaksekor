@@ -1,0 +1,1501 @@
+# Psar Kaksekor — Full Flutter App Config
+
+---
+
+## 1. Global Design Tokens
+
+### app_colors.dart
+```dart
+const Color colorDark     = Color(0xFF1A3A2A); // headers, primary buttons
+const Color colorMid      = Color(0xFF2D5A3F); // gradient mid
+const Color colorAccent   = Color(0xFF3D7A52); // prices, active nav, focus
+const Color colorLight    = Color(0xFF5CA870); // brand, subtitle, done steps
+const Color colorPale     = Color(0xFFE8F5EC); // card bg tints, selected states
+const Color colorYellow   = Color(0xFFF5C842); // stars, badges, edit icon
+const Color colorRed      = Color(0xFFE84B4B); // delete, danger, out of stock
+const Color colorBlue     = Color(0xFF3B82F6); // "on the way" status
+const Color colorOff      = Color(0xFFF5F7F5); // scaffold background
+const Color colorG100     = Color(0xFFF0F2F0); // chip inactive bg, ghost btn
+const Color colorG200     = Color(0xFFE0E4E0); // borders, dividers
+const Color colorG400     = Color(0xFF9AAB9A); // inactive nav, meta text
+const Color colorG600     = Color(0xFF5A6A5A); // secondary labels
+const Color colorTextDark = Color(0xFF1A2A1A); // primary text
+const Color colorTextMid  = Color(0xFF3A4A3A); // form labels
+
+// Status badge colors
+const Color statusPendingBg   = Color(0xFFFFF3CD);
+const Color statusPendingText = Color(0xFF956E00);
+const Color statusConfirmedBg   = Color(0xFFD4EDDA);
+const Color statusConfirmedText = Color(0xFF1A5C2A);
+const Color statusOnWayBg   = Color(0xFFDBEAFE);
+const Color statusOnWayText = Color(0xFF3B82F6);
+const Color statusDeliveredBg   = Color(0xFFF0F2F0);
+const Color statusDeliveredText = Color(0xFF5A6A5A);
+
+// Misc
+const Color deleteBg   = Color(0xFFFFEAEA); // soft red for del buttons
+const Color rankGold   = Color(0xFFF5C842); // rank #1 color
+```
+
+---
+
+### app_text_styles.dart
+```dart
+// Fonts: Nunito (headings/prices) + DM Sans (body/labels)
+// Add to pubspec.yaml:
+// google_fonts: ^6.x
+
+// Nunito styles
+final titleXL    = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:19, color:colorTextDark);
+final titleLarge = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:17, color:Colors.white);
+final titleMed   = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:14, color:colorTextDark);
+final titleSmall = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:12.5, color:colorTextDark);
+final sectionTitle = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:12.5, color:colorTextDark);
+final priceXL    = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:26, color:colorDark);
+final priceMed   = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:12, color:colorAccent);
+final priceSmall = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:11, color:colorAccent);
+final statVal    = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:20, color:Colors.white);
+final qtyVal     = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:13, color:colorTextDark);
+final rankGoldStyle = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:13, color:rankGold);
+final rankGrayStyle = TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:13, color:colorG400);
+
+// DM Sans styles
+final bodyMed    = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w500, fontSize:12, color:colorTextDark);
+final bodySmall  = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w400, fontSize:10.5, color:colorG600);
+final metaText   = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w400, fontSize:9.5, color:colorG400);
+final farmText   = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w400, fontSize:9, color:colorG400);
+final labelText  = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:11, color:colorTextMid);
+final navLabel   = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:8.5);
+final chipLabel  = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:10.5);
+final hintText   = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w400, fontSize:11.5, color:colorG400);
+final inputText  = TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w400, fontSize:11.5, color:colorTextDark);
+```
+
+---
+
+### app_constants.dart
+```dart
+// Border radii
+const double kRadiusCard    = 14.0;
+const double kRadiusChip    = 20.0;
+const double kRadiusModal   = 22.0;
+const double kRadiusHeader  = 22.0;  // bottom only
+const double kRadiusProfile = 28.0;  // bottom only
+const double kRadiusBtn     = 13.0;
+const double kRadiusInput   = 11.0;
+const double kRadiusSmall   = 9.0;
+const double kRadiusAvatar  = 50.0;
+const double kRadiusBadge   = 20.0;
+
+// Spacing
+const double kHeaderPaddingTop = 42.0;
+const double kScreenPadding    = 13.0;
+const double kCardPadding      = 11.0;
+const double kSectionGap       = 13.0;
+const double kListGap          = 7.0;
+const double kGridGap          = 9.0;
+const double kBtnPaddingV      = 13.0;
+const double kRowPaddingV      = 7.0;
+
+// Sizes
+const double kAvatarSize       = 30.0;
+const double kAvatarLarge      = 60.0;
+const double kFarmAvatarSize   = 44.0;
+const double kProductImgHeight = 58.0;
+const double kCartEmojiSize    = 42.0;
+const double kNavIconSize      = 19.0;
+const double kProgressDotSize  = 22.0;
+const double kToggleWidth      = 32.0;
+const double kToggleHeight     = 18.0;
+const double kToggleThumb      = 12.0;
+
+// Shadow
+const BoxShadow kCardShadow = BoxShadow(
+  color: Color(0x14000000),
+  blurRadius: 8,
+  offset: Offset(0, 2),
+);
+```
+
+---
+
+## 2. App Theme
+
+### app_theme.dart
+```dart
+ThemeData appTheme = ThemeData(
+  scaffoldBackgroundColor: colorOff,
+  fontFamily: 'DM Sans',
+  colorScheme: ColorScheme.light(
+    primary: colorDark,
+    secondary: colorAccent,
+    background: colorOff,
+  ),
+  appBarTheme: AppBarTheme(
+    backgroundColor: colorDark,
+    elevation: 0,
+    titleTextStyle: titleLarge,
+  ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: Colors.white,
+    selectedItemColor: colorAccent,
+    unselectedItemColor: colorG400,
+    selectedLabelStyle: navLabel.copyWith(color: colorAccent),
+    unselectedLabelStyle: navLabel.copyWith(color: colorG400),
+    type: BottomNavigationBarType.fixed,
+    elevation: 0,
+  ),
+);
+```
+
+---
+
+## 3. Common Widgets
+
+### custom_button.dart
+```dart
+// Primary Button
+ElevatedButton(
+  style: ElevatedButton.styleFrom(
+    backgroundColor: colorDark,
+    foregroundColor: Colors.white,
+    minimumSize: Size(double.infinity, 46),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kRadiusBtn)),
+    elevation: 0,
+    textStyle: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:12.5),
+  ),
+  onPressed: onPressed,
+  child: Text(label),
+)
+
+// Secondary Button
+OutlinedButton(
+  style: OutlinedButton.styleFrom(
+    foregroundColor: colorAccent,
+    minimumSize: Size(double.infinity, 42),
+    side: BorderSide(color: colorG200, width: 1.5),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kRadiusBtn)),
+    elevation: 0,
+    textStyle: TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:12),
+  ),
+  onPressed: onPressed,
+  child: Text(label),
+)
+
+// Action Button (seller dashboard row)
+// flex:1 in a Row, padding vertical 11 horizontal 6
+// Primary variant: colorDark bg, white Nunito 800 10.5px, radius 12
+// Secondary variant: colorG100 bg, colorMid text, same sizing
+```
+
+---
+
+### custom_text_field.dart
+```dart
+TextField(
+  style: inputText,
+  decoration: InputDecoration(
+    hintStyle: hintText,
+    contentPadding: EdgeInsets.symmetric(horizontal:12, vertical:10),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadiusInput),
+      borderSide: BorderSide(color: colorG200, width: 1.5),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadiusInput),
+      borderSide: BorderSide(color: colorAccent, width: 1.5),
+    ),
+    filled: true,
+    fillColor: Colors.white,
+  ),
+)
+
+// Textarea variant: maxLines 3, same decoration, resize:none
+// Select/Dropdown variant: DropdownButtonFormField, same decoration
+```
+
+---
+
+### section_title.dart
+```dart
+Padding(
+  padding: EdgeInsets.only(bottom: 9),
+  child: Text(
+    title,
+    style: sectionTitle, // Nunito 800 12.5px colorTextDark
+  ),
+)
+```
+
+---
+
+### app_header.dart
+```dart
+// Used on: Home, Browse, Cart screens
+// Bottom radius only
+Container(
+  decoration: BoxDecoration(
+    color: colorDark,
+    borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(kRadiusHeader),
+      bottomRight: Radius.circular(kRadiusHeader),
+    ),
+  ),
+  padding: EdgeInsets.fromLTRB(15, kHeaderPaddingTop, 15, 14),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left: brand text or screen title
+          // Right: avatar (30×30 circle colorLight, Nunito 900 12px white)
+        ],
+      ),
+      SizedBox(height: 10),
+      // Optional: search bar slot
+    ],
+  ),
+)
+
+// Avatar widget (reused everywhere)
+Container(
+  width: kAvatarSize, height: kAvatarSize,
+  decoration: BoxDecoration(color: colorLight, shape: BoxShape.circle),
+  alignment: Alignment.center,
+  child: Text('K', style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:12, color:Colors.white)),
+)
+```
+
+---
+
+### status_badge.dart
+```dart
+// Pass OrderStatus enum, returns correct colors
+Container(
+  padding: EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+  decoration: BoxDecoration(
+    color: bgColor,   // see status colors in app_colors.dart
+    borderRadius: BorderRadius.circular(kRadiusBadge),
+  ),
+  child: Text(
+    label,
+    style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:9, color:textColor),
+  ),
+)
+
+// Status map:
+// pending   → statusPendingBg / statusPendingText / 'Pending'
+// confirmed → statusConfirmedBg / statusConfirmedText / 'Confirmed'
+// onWay     → statusOnWayBg / statusOnWayText / 'On the Way'
+// delivered → statusDeliveredBg / statusDeliveredText / 'Delivered'
+```
+
+---
+
+### progress_tracker.dart
+```dart
+// 4-step horizontal tracker
+// Full width Row with Stack for connector line underneath dots
+
+// Connector line
+Stack(
+  alignment: Alignment.centerLeft,
+  children: [
+    // Base line: full width, height 2, colorG200
+    Container(height: 2, color: colorG200),
+    // Fill line: animated width based on step, height 2, colorLight
+    AnimatedContainer(
+      duration: Duration(milliseconds: 400),
+      width: fillWidth, // 0%, 33%, 66%, 100% of total
+      height: 2,
+      color: colorLight,
+    ),
+  ],
+)
+
+// Dot config per step:
+// Done:    22×22 circle, colorLight bg, white "✓" 10px
+// Active:  22×22 circle, colorDark bg, emoji icon 10px
+//          + outer ring: BoxShadow(color: colorLight.withOpacity(0.25), spreadRadius: 3)
+// Pending: 22×22 circle, white bg, colorG200 border 2px, emoji icon 10px colorG400
+
+// Label below each dot: DM Sans 700 8px, maxWidth 44, textAlign center
+// Done   → colorLight
+// Active → colorDark (fontWeight 800)
+// Pending→ colorG400
+
+// Step icons (text emoji or Icon):
+// Step 0: 📋 Ordered
+// Step 1: ✅ Confirmed
+// Step 2: 🚚 On the Way
+// Step 3: 📦 Delivered
+```
+
+---
+
+### profile_section.dart
+```dart
+// White card used throughout Profile screen
+Container(
+  margin: EdgeInsets.only(bottom: 10),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(kRadiusCard),
+    boxShadow: [kCardShadow],
+  ),
+  padding: EdgeInsets.all(12),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Section title: Nunito 800 11.5px colorTextDark, marginBottom 10
+      Text(title, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:11.5, color:colorTextDark)),
+      SizedBox(height: 10),
+      // Rows passed as children
+      ...rows,
+    ],
+  ),
+)
+
+// Profile row (inside section)
+// padding vertical 7, border bottom 1px colorG100
+// Last row: no border, paddingBottom 0
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    // Label: DM Sans 10.5px colorG600 (with optional icon prefix, gap 6)
+    // Value: Nunito 600 10.5px colorTextDark
+    // OR badge, toggle, arrow, etc.
+  ],
+)
+```
+
+---
+
+### toggle_switch.dart
+```dart
+// width 32, height 18
+// Active: colorAccent bg
+// Inactive: colorG200 bg
+// Thumb: 12×12 white circle, positioned top:3 right:3 (active) or top:3 left:3 (inactive)
+// Animate thumb position with AnimatedPositioned
+GestureDetector(
+  onTap: () => setState(() => isOn = !isOn),
+  child: AnimatedContainer(
+    duration: Duration(milliseconds: 200),
+    width: kToggleWidth,
+    height: kToggleHeight,
+    decoration: BoxDecoration(
+      color: isOn ? colorAccent : colorG200,
+      borderRadius: BorderRadius.circular(9),
+    ),
+    child: Stack(
+      children: [
+        AnimatedPositioned(
+          duration: Duration(milliseconds: 200),
+          top: 3,
+          right: isOn ? 3 : null,
+          left: isOn ? null : 3,
+          child: Container(
+            width: kToggleThumb,
+            height: kToggleThumb,
+            decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          ),
+        ),
+      ],
+    ),
+  ),
+)
+```
+
+---
+
+### action_row.dart
+```dart
+// Used in Profile Settings + logout rows
+Container(
+  padding: EdgeInsets.symmetric(vertical: kRowPaddingV),
+  decoration: BoxDecoration(
+    border: isLast ? null : Border(
+      bottom: BorderSide(color: colorG100, width: 1),
+    ),
+  ),
+  child: Row(
+    children: [
+      // Icon container: 28×28, radius 8, iconBg color per row
+      Container(
+        width: 28, height: 28,
+        decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(8)),
+        alignment: Alignment.center,
+        child: Text(icon, style: TextStyle(fontSize: 14)),
+      ),
+      SizedBox(width: 8),
+      Expanded(
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontWeight: FontWeight.w600,
+            fontSize: 11,
+            color: isDanger ? colorRed : colorTextDark,
+          ),
+        ),
+      ),
+      if (!isDanger)
+        Text('›', style: TextStyle(fontSize: 11, color: colorG400)),
+    ],
+  ),
+)
+
+// Icon bg colors per row:
+// Help         → Color(0xFFF0F9FF)
+// Terms        → Color(0xFFF5F5FF)
+// Invite       → Color(0xFFFFF5E8)
+// Logout       → Color(0xFFFFEAEA)
+// Notifications→ colorPale
+```
+
+---
+
+### bottom_sheet_handle.dart
+```dart
+// Drag handle at top of modal sheets
+Center(
+  child: Container(
+    width: 36, height: 4,
+    margin: EdgeInsets.only(top: 10, bottom: 4),
+    decoration: BoxDecoration(
+      color: colorG200,
+      borderRadius: BorderRadius.circular(2),
+    ),
+  ),
+)
+```
+
+---
+
+### loading_indicator.dart
+```dart
+CircularProgressIndicator(
+  color: colorAccent,
+  strokeWidth: 2.5,
+)
+```
+
+---
+
+### toast_message.dart
+```dart
+// Use OverlayEntry, positioned above bottom nav (bottom: 58)
+// bg: colorDark
+// text: Nunito 700 11.5px white
+// padding: EdgeInsets.symmetric(horizontal:20, vertical:10)
+// radius: 50 (full pill)
+// shadow: BoxShadow(color: Color(0x4D000000), blurRadius:20, offset:Offset(0,6))
+// animation: FadeTransition + SlideTransition (translateY 30 → 0)
+//   curve: cubic-bezier spring feel → Curves.elasticOut or Curves.easeOutBack
+// auto-dismiss: 2400ms
+// whiteSpace: no wrap (single line)
+```
+
+---
+
+## 4. Buyer Widgets
+
+### product_card.dart
+```dart
+// Used in Home grid (GridView 2 cols, gap 9)
+GestureDetector(
+  onTap: () => openProductDetail(product),
+  child: Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(kRadiusCard),
+      boxShadow: [kCardShadow],
+    ),
+    padding: EdgeInsets.all(kCardPadding),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Emoji box
+        Container(
+          width: double.infinity,
+          height: kProductImgHeight,
+          decoration: BoxDecoration(
+            color: product.bgColor,
+            borderRadius: BorderRadius.circular(kRadiusSmall),
+          ),
+          alignment: Alignment.center,
+          child: Text(product.emoji, style: TextStyle(fontSize: 26)),
+        ),
+        SizedBox(height: 7),
+        Text(product.name, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:10.5, color:colorTextDark)),
+        Text(product.farm, style: farmText),
+        SizedBox(height: 3),
+        Text(product.price, style: priceSmall),
+      ],
+    ),
+  ),
+)
+```
+
+---
+
+### product_search_item.dart
+```dart
+// Used in Browse trending list + search results
+GestureDetector(
+  onTap: () => openProductDetail(product),
+  child: Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [kCardShadow],
+    ),
+    padding: EdgeInsets.all(10),
+    child: Row(
+      children: [
+        // Rank number (only in trending, hide in search results)
+        if (showRank)
+          SizedBox(
+            width: 22,
+            child: Text(
+              rank.toString(),
+              style: rank == 1 ? rankGoldStyle : rankGrayStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        // Emoji box: 40×40, radius 9, product.bgColor
+        Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(color: product.bgColor, borderRadius: BorderRadius.circular(kRadiusSmall)),
+          alignment: Alignment.center,
+          child: Text(product.emoji, style: TextStyle(fontSize: 20)),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(product.name, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:11, color:colorTextDark)),
+              Text(product.farm, style: metaText),
+            ],
+          ),
+        ),
+        Text(product.price, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:12, color:colorAccent)),
+      ],
+    ),
+  ),
+)
+```
+
+---
+
+### farm_pill.dart
+```dart
+// Used in Browse trending farms horizontal scroll
+GestureDetector(
+  onTap: () => openProductDetail(farm.featuredProduct),
+  child: Column(
+    children: [
+      // Avatar
+      Container(
+        width: kFarmAvatarSize, height: kFarmAvatarSize,
+        decoration: BoxDecoration(
+          color: farm.bgColor,
+          shape: BoxShape.circle,
+          border: Border.all(color: colorG200, width: 2),
+        ),
+        alignment: Alignment.center,
+        child: Text(farm.emoji, style: TextStyle(fontSize: 20)),
+      ),
+      SizedBox(height: 4),
+      // Farm name
+      SizedBox(
+        width: 50,
+        child: Text(
+          farm.name,
+          style: TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:9, color:colorG600),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+        ),
+      ),
+      // Rank label
+      Text(
+        farm.rankLabel, // e.g. '↑ #1'
+        style: TextStyle(
+          fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:8,
+          color: farm.rank == 1 ? colorLight : colorG400,
+        ),
+      ),
+    ],
+  ),
+)
+```
+
+---
+
+### cart_item.dart
+```dart
+// Swipeable cart row using Dismissible
+Dismissible(
+  key: Key(item.id),
+  direction: DismissDirection.endToStart,
+  background: Container(
+    alignment: Alignment.centerRight,
+    padding: EdgeInsets.only(right: 20),
+    decoration: BoxDecoration(
+      color: colorRed,
+      borderRadius: BorderRadius.circular(kRadiusBtn),
+    ),
+    child: Icon(Icons.delete_outline, color: Colors.white, size: 20),
+  ),
+  onDismissed: (_) => onDelete(item),
+  child: Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(kRadiusBtn),
+      boxShadow: [kCardShadow],
+    ),
+    padding: EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+    child: Row(
+      children: [
+        // Emoji box: 42×42, colorPale bg, radius 9
+        Container(
+          width: kCartEmojiSize, height: kCartEmojiSize,
+          decoration: BoxDecoration(color: colorPale, borderRadius: BorderRadius.circular(kRadiusSmall)),
+          alignment: Alignment.center,
+          child: Text(item.emoji, style: TextStyle(fontSize: 20)),
+        ),
+        SizedBox(width: 9),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(item.name, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:11, color:colorTextDark)),
+              Text(item.subtitle, style: metaText),
+            ],
+          ),
+        ),
+        Text('\$${item.price.toStringAsFixed(2)}', style: priceMed),
+      ],
+    ),
+  ),
+)
+```
+
+---
+
+### payment_option.dart
+```dart
+// Selectable payment button, flex:1 in a Row, gap 7
+GestureDetector(
+  onTap: () => onSelect(method),
+  child: AnimatedContainer(
+    duration: Duration(milliseconds: 150),
+    padding: EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: isSelected ? colorPale : Colors.white,
+      border: Border.all(
+        color: isSelected ? colorAccent : colorG200,
+        width: 1.5,
+      ),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    alignment: Alignment.center,
+    child: Text(
+      label, // e.g. '🏦 ABA'
+      style: TextStyle(
+        fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:10,
+        color: isSelected ? colorAccent : colorG600,
+      ),
+    ),
+  ),
+)
+```
+
+---
+
+### order_card_buyer.dart
+```dart
+// Full tracker card in buyer orders modal
+// See progress_tracker.dart for step progress config
+Container(
+  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(kRadiusCard), boxShadow: [kCardShadow]),
+  padding: EdgeInsets.all(12),
+  margin: EdgeInsets.only(bottom: 8),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Top row: order ID + date left, status badge right
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(orderId, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:12, color:colorTextDark)),
+            Text(dateAndFarm, style: metaText),
+          ]),
+          StatusBadge(status: order.status),
+        ],
+      ),
+      SizedBox(height: 6),
+      Text(itemsSummary, style: TextStyle(fontSize:10, color:colorG600)),
+      Text('Total: \$${order.total}', style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:11.5, color:colorDark)),
+      SizedBox(height: 12),
+      ProgressTracker(currentStep: order.step),
+      SizedBox(height: 8),
+      // Action buttons row
+      Row(children: [
+        // Ghost: contact seller
+        // Ghost: details
+        // OR if delivered: Primary reorder + Ghost review
+        // OR if active: Ghost contact + Red cancel
+      ]),
+    ],
+  ),
+)
+
+// Action button sizes inside order card
+// padding: EdgeInsets.symmetric(vertical:7), flex:1, radius 9
+// Primary: colorDark bg, white Nunito 800 10px
+// Ghost:   colorG100 bg, colorMid text Nunito 800 10px
+// Red:     deleteBg bg, colorRed text Nunito 800 10px
+```
+
+---
+
+## 5. Seller Widgets
+
+### stat_card.dart
+```dart
+// Used in Seller Dashboard 2×2 grid
+Container(
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(0.09),
+    border: Border.all(color: Colors.white.withOpacity(0.07)),
+    borderRadius: BorderRadius.circular(11),
+  ),
+  padding: EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(value, style: statVal),  // Nunito 900 20px white
+      SizedBox(height: 2),
+      Text(label, style: TextStyle(fontFamily:'DM Sans', fontSize:9, color:Colors.white.withOpacity(0.45))),
+    ],
+  ),
+)
+```
+
+---
+
+### order_card_seller.dart
+```dart
+// Same layout as order_card_buyer.dart but with seller-specific action buttons
+// Action buttons:
+//   Pending:   Primary "✓ Confirm Order" + Red "✕ Cancel"
+//   Confirmed: Primary "🚚 Mark as Shipped" + Ghost "✉ Message"
+//   OnTheWay:  Primary "📦 Mark Delivered" + Ghost "✉ Message"
+//   Delivered: Ghost "↻ Restock" only
+```
+
+---
+
+### product_list_tile.dart
+```dart
+// Used in My Products modal
+Container(
+  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [kCardShadow]),
+  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+  margin: EdgeInsets.only(bottom: kListGap),
+  child: Row(
+    children: [
+      // Emoji box: 38×38, radius 9, product.bgColor
+      Container(
+        width: 38, height: 38,
+        decoration: BoxDecoration(color: product.bgColor, borderRadius: BorderRadius.circular(kRadiusSmall)),
+        alignment: Alignment.center,
+        child: Text(product.emoji, style: TextStyle(fontSize: 18)),
+      ),
+      SizedBox(width: 9),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(product.name, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:11, color:colorTextDark)),
+            Row(children: [
+              Text('\$${product.price}/${product.unit} · ${product.stock} left ', style: metaText),
+              // Stock dot: 7×7 circle
+              Container(
+                width: 7, height: 7,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: product.stock == 0 ? colorRed
+                       : product.stock < 10 ? colorYellow
+                       : colorAccent,
+                ),
+              ),
+            ]),
+          ],
+        ),
+      ),
+      SizedBox(width: 5),
+      // Edit button: colorPale bg, colorAccent text
+      // Delete button: deleteBg bg, colorRed text
+      // Both: Nunito 800 9px, radius 8, padding h:9 v:4
+      Row(
+        children: [
+          _ActionPill(label: 'Edit', bg: colorPale, textColor: colorAccent, onTap: onEdit),
+          SizedBox(width: 5),
+          _ActionPill(label: 'Del', bg: deleteBg, textColor: colorRed, onTap: onDelete),
+        ],
+      ),
+    ],
+  ),
+)
+```
+
+---
+
+### earnings_card.dart
+```dart
+// Used in Seller Profile earnings row (3 cards in a Row, gap 6)
+Container(
+  decoration: BoxDecoration(
+    color: colorPale,
+    borderRadius: BorderRadius.circular(10),
+  ),
+  padding: EdgeInsets.all(8),
+  child: Column(
+    children: [
+      Text(value, style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:14, color:colorDark)),
+      SizedBox(height: 1),
+      Text(label, style: TextStyle(fontFamily:'DM Sans', fontSize:8.5, color:colorG600)),
+    ],
+  ),
+)
+```
+
+---
+
+### linked_account_chip.dart
+```dart
+// Used in Profile Settings section
+GestureDetector(
+  onTap: onTap,
+  child: Container(
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      color: isConnected ? colorPale : Colors.white,
+      border: Border.all(
+        color: isConnected ? colorAccent : colorG200,
+        width: 1.5,
+      ),
+      borderRadius: BorderRadius.circular(kRadiusSmall),
+    ),
+    child: Text(
+      label, // 'Google', 'Apple', 'Facebook'
+      style: TextStyle(
+        fontFamily:'DM Sans', fontWeight:FontWeight.w700, fontSize:9.5,
+        color: isConnected ? colorAccent : colorG600,
+      ),
+    ),
+  ),
+)
+```
+
+---
+
+### qty_control.dart
+```dart
+// Used in Product Detail modal
+Container(
+  decoration: BoxDecoration(
+    color: colorG100,
+    borderRadius: BorderRadius.circular(kRadiusSmall),
+  ),
+  child: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      GestureDetector(
+        onTap: () => qty > 1 ? setState(() => qty--) : null,
+        child: Container(
+          width: 28, height: 28,
+          alignment: Alignment.center,
+          child: Text('−', style: TextStyle(fontSize:15, fontWeight:FontWeight.w800, color:colorAccent)),
+        ),
+      ),
+      Container(
+        constraints: BoxConstraints(minWidth: 30),
+        alignment: Alignment.center,
+        child: Text('$qty', style: qtyVal),
+      ),
+      GestureDetector(
+        onTap: () => qty < 12 ? setState(() => qty++) : null,
+        child: Container(
+          width: 28, height: 28,
+          alignment: Alignment.center,
+          child: Text('+', style: TextStyle(fontSize:15, fontWeight:FontWeight.w800, color:colorAccent)),
+        ),
+      ),
+    ],
+  ),
+)
+```
+
+---
+
+## 6. Navigation
+
+### Bottom Nav — Buyer
+```dart
+BottomNavigationBar(
+  // decoration: top border 1px colorG200
+  backgroundColor: Colors.white,
+  selectedItemColor: colorAccent,
+  unselectedItemColor: colorG400,
+  selectedLabelStyle: navLabel,
+  unselectedLabelStyle: navLabel,
+  type: BottomNavigationBarType.fixed,
+  elevation: 0,
+  items: [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+    BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Browse'),
+    BottomNavigationBarItem(
+      icon: Stack(children: [
+        Icon(Icons.shopping_bag_outlined),
+        // Badge: 14×14 circle colorRed, white Nunito 900 8px
+        // positioned top:-2 right: calc(50% - 18px)
+        if (cartCount > 0) Positioned(top:0, right:0, child: CartBadge(count: cartCount)),
+      ]),
+      label: 'Cart',
+    ),
+    BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+  ],
+)
+
+// Cart badge
+Container(
+  width: 14, height: 14,
+  decoration: BoxDecoration(color: colorRed, shape: BoxShape.circle),
+  alignment: Alignment.center,
+  child: Text('$count', style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w900, fontSize:8, color:Colors.white)),
+)
+```
+
+### Bottom Nav — Seller
+```dart
+// Same styling, different items:
+// Dashboard → shopping_grid icon
+// Products  → inventory icon
+// Orders    → list_alt icon
+// Profile   → person_outline icon
+```
+
+---
+
+## 7. Screens
+
+### buyer_home_screen.dart
+```dart
+// Layout: Column → AppHeader (shrinkWrap) + Expanded scrollable body
+
+// Header content:
+//   Row: "🌿 Psar Kaksekor" (Nunito 900 17px white) + Avatar
+//   Search bar (tap → navigate to Browse)
+
+// Search bar (home, tap-only):
+Container(
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(0.1),
+    borderRadius: BorderRadius.circular(11),
+  ),
+  padding: EdgeInsets.symmetric(horizontal:12, vertical:8),
+  child: Row(children: [
+    Icon(Icons.search, size:13, color:Colors.white.withOpacity(0.45)),
+    SizedBox(width:7),
+    Text('Search vegetables, rice...', style: TextStyle(fontSize:11.5, color:Colors.white.withOpacity(0.45))),
+  ]),
+)
+
+// Body (scrollable, padding 13):
+//   Category chip row (gap 6, wrap)
+//   SectionTitle 'Fresh Products Near You'
+//   GridView (2 cols, gap 9, shrinkWrap, NeverScrollableScrollPhysics)
+//     → ProductCard widgets
+
+// Category chips: All / 🥦 Veggies / 🌾 Grains / 🍎 Fruit
+// Filter products list on chip tap
+```
+
+---
+
+### browse_screen.dart
+```dart
+// Header content:
+//   Row: "🔍 Browse" (brand style) + Avatar
+//   Active search TextField (DM Sans 12px white, hint colorWhite 0.4)
+//   Search bar border: colorWhite.withOpacity(0.2) width 1.5, radius 13
+
+// Body (scrollable, padding 13):
+//   IF query empty → show browse_default content:
+//     Row: "🔥 Trending Farms" + "Updated today" (9.5px colorAccent)
+//     Horizontal ListView of FarmPill widgets (gap 8, no scrollbar)
+//     Row: "📈 Trending Products" + "This week" label
+//     Vertical list of ProductSearchItem (showRank: true)
+//
+//   IF query not empty → show search results:
+//     Vertical list of matching ProductSearchItem (showRank: false)
+//     If no matches: center text "😕 No results for '...'" DM Sans 12px colorG400
+```
+
+---
+
+### cart_screen.dart
+```dart
+// Header content:
+//   Row: "🛒 My Cart" (Nunito 900 17px) + item count badge (colorYellow) + "My Orders" link
+//   Item count badge: colorYellow bg, Color(0xFF1A1A00) text, Nunito 900 10px, radius 20
+//   "My Orders" link: DM Sans 700 10px colorWhite.withOpacity(0.7), opens buyer orders modal
+
+// Body (scrollable, padding 13):
+//   ListView of CartItem (Dismissible, gap 7)
+//   Order summary card:
+//     white bg, radius 14, padding 12
+//     Row "Subtotal" + computed value
+//     Row "Delivery fee" + "$0.50"
+//     Row "Platform fee (5%)" + computed value
+//     Divider (colorG200)
+//     Row "Total" (Nunito 900 13px colorTextDark) + total
+//   Payment label: Nunito 800 11.5px colorTextDark, marginBottom 7
+//   Row of 3 PaymentOption widgets (gap 7)
+//   CustomButton primary "✓ Place Order"
+```
+
+---
+
+### buyer_profile_screen.dart
+```dart
+// Layout: Column → ProfileHero + Expanded scrollable body
+
+// ProfileHero:
+//   gradient colorDark → colorMid, bottom radius 28
+//   padding fromLTRB(16, 42, 16, 20)
+//   Role toggle (Buyer / Seller)
+//   Avatar with edit overlay
+//   Name, role label, location
+//   Edit Profile button
+
+// Body (scrollable, padding 14):
+//   ProfileSection "👤 Account Details"
+//     email, phone, verified badge
+//
+//   [Buyer mode content:]
+//   ProfileSection "❤️ Saved Items"
+//     WishlistItem rows (emoji + name/farm + heart)
+//   ProfileSection "📦 Order History"
+//     3 recent order rows + "Track My Orders" button → opens buyer orders modal
+//   ProfileSection "💳 Payment Methods"
+//     ABA (default badge), Bakong (+Add), Delivery Address
+//   ProfileSection "⭐ My Reviews"
+//     farm + product name + star rating
+//
+//   [Seller mode content:]
+//   ProfileSection "🌾 Business Info"
+//     farm name, produce type, province, certification badge, bio text
+//   ProfileSection "💰 Earnings"
+//     Row of 3 EarningsCard (week/month/year)
+//     avg rating row, total orders row
+//   ProfileSection "📦 Product Management"
+//     active listings, low stock alert badge
+//     Row of 3 action buttons (Products / Orders / Add)
+//   ProfileSection "📣 Promotions & Analytics"
+//     discount, featured, views, clicks
+//   ProfileSection "⭐ Ratings & Reviews"
+//     review rows
+//
+//   ProfileSection "⚙️ Settings" (both modes)
+//     Notifications toggle (on)
+//     SMS Alerts toggle (off)
+//     Language row
+//     Linked accounts row (LinkedAccountChip ×3)
+//   ProfileSection (actions)
+//     ActionRow: Help / Terms / Invite / Logout
+//     Version text: "Psar Kaksekor v1.0.0" DM Sans 9px colorG400 centered
+```
+
+---
+
+### seller_dashboard_screen.dart
+```dart
+// Header (no bottom radius, full dark bg):
+//   "Good morning," — DM Sans 10px colorWhite.withOpacity(0.5)
+//   Row: seller name (Nunito 900 18px white) + Avatar (initial 'S')
+//   2×2 GridView of StatCard (gap 7, shrinkWrap)
+//     $128 This month / 7 New orders / 4 Products listed / 4.8★ Avg rating
+
+// Body (scrollable, padding 13):
+//   Row of 3 action buttons (gap 7):
+//     "＋ Add Product" (primary) → opens add product modal
+//     "📦 My Products" (secondary) → opens my products modal
+//     "📋 Orders" (secondary) → opens seller orders modal
+//   SectionTitle "Recent Orders"
+//   3 OrderCard rows (compact version, no progress tracker)
+//     #ORD-0042 Pending / #ORD-0041 Confirmed / #ORD-0040 Delivered
+```
+
+---
+
+### seller_profile_screen.dart
+```dart
+// Same ProfileHero as buyer_profile_screen
+// Body shows seller mode content (see buyer_profile_screen above)
+// Toggling role in profile navigates between buyer/seller profile views
+```
+
+---
+
+## 8. Modals
+
+### product_detail_modal.dart
+```dart
+showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  backgroundColor: Colors.transparent,
+  builder: (_) => DraggableScrollableSheet(
+    initialChildSize: 0.88,
+    maxChildSize: 0.92,
+    minChildSize: 0.4,
+    builder: (_, scrollController) => Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(kRadiusModal)),
+      ),
+      child: Column(
+        children: [
+          // Hero section (not scrollable)
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFDFF0E5), Color(0xFFC8E6D2)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(kRadiusModal)),
+            ),
+            padding: EdgeInsets.fromLTRB(18, 14, 18, 18),
+            child: Column(children: [
+              // Back + organic badge row
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                // Back button: 28×28 circle colorWhite 0.25, "←" white
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    width:28, height:28,
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.25), shape: BoxShape.circle),
+                    alignment: Alignment.center,
+                    child: Text('←', style: TextStyle(fontSize:13, fontWeight:FontWeight.w700, color:Colors.white)),
+                  ),
+                ),
+                // Organic badge: colorAccent bg, white Nunito 800 8.5px, radius 20
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal:9, vertical:4),
+                  decoration: BoxDecoration(color: colorAccent, borderRadius: BorderRadius.circular(kRadiusBadge)),
+                  child: Text('✓ Organic', style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:8.5, color:Colors.white)),
+                ),
+              ]),
+              // Hero emoji: fontSize 68
+              // Animate: continuous float up/down using AnimationController
+              // translateY 0 → -5 → 0, duration 3s, repeat
+            ]),
+          ),
+          // Scrollable body
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              padding: EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(product.name, style: titleXL),                     // Nunito 900 19px
+                  Text('by ${product.farm}', style: farmText),             // DM Sans 10.5px colorG400
+                  // Stars row: colorYellow 12px + "4.9 (23 reviews)" DM Sans 10px colorG600
+                  Row(children: [
+                    Text('★★★★★', style: TextStyle(color: colorYellow, fontSize: 12)),
+                    SizedBox(width: 5),
+                    Text('4.9 (23 reviews)', style: TextStyle(fontFamily:'DM Sans', fontSize:10, color:colorG600)),
+                  ]),
+                  // Price row
+                  Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Text('\$${product.basePrice.toStringAsFixed(2)}', style: priceXL),  // Nunito 900 26px colorDark
+                    Text(' / kg', style: TextStyle(fontSize:12, color:colorG400)),
+                  ]),
+                  Text('${product.stock} kg available', style: TextStyle(fontSize:10, color:colorG400)),
+                  Divider(color: colorG200, height: 22),
+                  Text('About this product', style: TextStyle(fontFamily:'Nunito', fontWeight:FontWeight.w800, fontSize:12, color:colorTextDark)),
+                  SizedBox(height: 5),
+                  Text(product.description, style: TextStyle(fontFamily:'DM Sans', fontSize:10.5, color:colorG600, height:1.6)),
+                  SizedBox(height: 12),
+                  // Qty row
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Text('Quantity (kg)', style: TextStyle(fontFamily:'DM Sans', fontWeight:FontWeight.w600, fontSize:11.5, color:colorTextMid)),
+                    QtyControl(qty: qty, onChanged: (v) => setState(() => qty = v)),
+                  ]),
+                  SizedBox(height: 11),
+                  CustomButton(
+                    label: '🛒 Add to Cart — \$${(qty * product.basePrice).toStringAsFixed(2)}',
+                    onPressed: () => addToCart(),
+                  ),
+                  SizedBox(height: 7),
+                  CustomButton(
+                    label: '✉ Message Seller',
+                    variant: ButtonVariant.secondary,
+                    onPressed: () => messageSeller(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+)
+```
+
+---
+
+### buyer_orders_modal.dart
+```dart
+// Bottom sheet, max height 88%
+// Handle + header "📦 My Orders" + close button
+
+// Filter tabs row (scrollable horizontal):
+//   All / Active / Delivered
+//   Active: colorDark bg, white DM Sans 700 10px, radius 20
+//   Inactive: colorG100 bg, colorG600 text
+
+// Scrollable body:
+//   List of OrderCardBuyer filtered by selected tab
+//   data-bstatus: 'active' or 'delivered'
+```
+
+---
+
+### my_products_modal.dart
+```dart
+// Bottom sheet
+// Handle + header "📦 My Products" + close button
+// CustomButton primary "＋ Add New Product" → opens add product modal
+// List of ProductListTile widgets
+```
+
+---
+
+### add_product_modal.dart
+```dart
+// Bottom sheet, isScrollControlled true
+// Handle + header "＋ Add New Product" + close button
+
+// Scrollable form body (padding 14):
+//   FormGroup: Product Name * (CustomTextField)
+//   FormGroup: Category * (DropdownButtonFormField)
+//     Options: 🥦 Vegetables / 🌾 Grains & Rice / 🍎 Fruits / 🌿 Herbs / 🥚 Eggs & Dairy
+//   FormRow (2 cols, gap 9):
+//     FormGroup: Price ($) * (CustomTextField, keyboardType number)
+//     FormGroup: Unit * (DropdownButtonFormField: per kg / per piece / per bunch / per bag)
+//   FormGroup: Stock Available * (CustomTextField, keyboardType number)
+//   FormGroup: Description (CustomTextField, maxLines 3)
+//   FormGroup: Certifications
+//     Wrap of toggleable chips: ✓ Organic / No Pesticide / Local Farm
+//   FormGroup: Product Photo
+//     Image upload box: 70px height, dashed border 2px colorG200 → colorAccent on hover
+//     Row: 📷 + "Tap to add photo" DM Sans 11px colorG400
+//   CustomButton primary "✓ Submit Product"
+//   CustomButton secondary "Cancel"
+
+// Form label style: Nunito 700 11px colorTextMid, marginBottom 5
+// FormGroup margin bottom: 11
+```
+
+---
+
+### seller_orders_modal.dart
+```dart
+// Bottom sheet, max height 88%
+// Handle + header "📋 Manage Orders" + close button
+
+// Filter tabs (horizontal scroll):
+//   All (6) / Pending (2) / Confirmed (1) / On the Way (1) / Delivered (2)
+
+// Scrollable body:
+//   List of OrderCardSeller filtered by selected tab
+//   Each card has ProgressTracker + advance action buttons
+//   Advancing order updates step, status badge, and button labels
+```
+
+---
+
+## 9. Routes
+
+### routes.dart
+```dart
+// Named routes
+const String routeHome          = '/';
+const String routeBuyerHome     = '/buyer/home';
+const String routeBrowse        = '/buyer/browse';
+const String routeCart          = '/buyer/cart';
+const String routeBuyerProfile  = '/buyer/profile';
+const String routeSellerDash    = '/seller/dashboard';
+const String routeSellerProfile = '/seller/profile';
+
+// Modal sheets are not named routes — opened with showModalBottomSheet()
+// product_detail_modal    → openProductDetail(product)
+// buyer_orders_modal      → openBuyerOrders()
+// my_products_modal       → openMyProducts()
+// add_product_modal       → openAddProduct()
+// seller_orders_modal     → openSellerOrders()
+```
+
+---
+
+## 10. Models
+
+### product_model.dart
+```dart
+class ProductModel {
+  final String id;
+  final String name;
+  final String farmName;
+  final String emoji;
+  final Color bgColor;
+  final double basePrice;
+  final String unit;       // 'kg', 'pc', 'bunch', 'bag'
+  final int stock;
+  final String category;   // 'veg', 'grain', 'fruit', 'herb'
+  final String description;
+  final bool isOrganic;
+  final double rating;
+  final int reviewCount;
+}
+```
+
+### order_model.dart
+```dart
+enum OrderStatus { pending, confirmed, onWay, delivered }
+
+class OrderModel {
+  final String id;
+  final String farmName;
+  final List<CartItemModel> items;
+  final double total;
+  final OrderStatus status;
+  final DateTime createdAt;
+  final String buyerName;
+  final String deliveryAddress;
+}
+```
+
+### cart_item_model.dart
+```dart
+class CartItemModel {
+  final String productId;
+  final String name;
+  final String emoji;
+  final double price;      // unit price
+  final int quantity;
+  final String unit;
+  double get total => price * quantity;
+  String get subtitle => '$quantity $unit × \$${price.toStringAsFixed(2)}';
+}
+```
+
+### user_model.dart
+```dart
+enum UserRole { buyer, seller }
+
+class UserModel {
+  final String id;
+  final String name;
+  final String email;
+  final String phone;
+  final String location;
+  final UserRole role;
+  final String avatarInitial;
+  // Seller-only fields
+  final String? farmName;
+  final String? produceType;
+  final String? province;
+  final bool isOrganic;
+}
+```
+
+### farm_model.dart
+```dart
+class FarmModel {
+  final String id;
+  final String name;
+  final String emoji;
+  final Color bgColor;
+  final int rank;
+  final String rankLabel;  // '↑ #1', '— #4', etc.
+  final ProductModel featuredProduct;
+}
+```
+
+---
+
+## 11. Providers
+
+### cart_provider.dart
+```dart
+// State: List<CartItemModel>
+// Methods:
+//   addItem(product, qty)
+//   removeItem(productId)
+//   clearCart()
+//   get itemCount → int
+//   get subtotal  → double
+//   get fee       → double (subtotal * 0.05)
+//   get total     → double (subtotal + 0.50 + fee)
+```
+
+### product_provider.dart
+```dart
+// State: List<ProductModel> allProducts, String selectedCategory, String searchQuery
+// Methods:
+//   setCategory(cat)
+//   setQuery(q)
+//   get filteredProducts → List<ProductModel>
+//   get trendingProducts → List<ProductModel> (top 5 by views)
+```
+
+### order_provider.dart
+```dart
+// State: List<OrderModel> buyerOrders, List<OrderModel> sellerOrders
+// Methods:
+//   placeOrder(cartItems, paymentMethod)
+//   advanceOrder(orderId)   // seller advances step
+//   cancelOrder(orderId)
+//   get activeOrders        → filtered by status != delivered
+//   get deliveredOrders     → filtered by status == delivered
+```
+
+### auth_provider.dart
+```dart
+// State: UserModel? currentUser, UserRole activeRole
+// Methods:
+//   login(email, password)
+//   logout()
+//   switchRole(role)  // buyer ↔ seller toggle in profile
+```
+
+### user_provider.dart
+```dart
+// State: UserModel? profile, List<ProductModel> savedItems
+// Methods:
+//   toggleSaved(product)
+//   isSaved(productId) → bool
+//   updateProfile(...)
+```

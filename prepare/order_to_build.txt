@@ -1,0 +1,25 @@
+1. Must build first (no dependencies)
+These depend on nothing else in the project:
+-app_colors.dart
+-app_text_styles.dart
+-app_constants.dart
+-All 5 models (user_model.dart, product_model.dart, etc.)
+
+
+2. Build second (depends on core only)
+-app_theme.dart → needs colors + text styles
+-All widgets in widgets/common/ → needs colors + constants
+-All widgets in widgets/buyer/ → needs colors + models
+-All widgets in widgets/seller/ → needs colors + models
+
+
+3. Build third (depends on widgets + models)
+-All providers → needs models
+-All screens → needs widgets + providers
+-All modals → needs widgets + providers
+
+
+4. Build last
+-routes.dart → needs all screens
+-app.dart → needs theme + routes
+-main.dart → needs app.dart
