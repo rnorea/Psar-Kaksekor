@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../providers/cart_provider.dart';
-import '../../../providers/order_provider.dart';
-import '../../../widgets/buyer/cart_item.dart';
-import '../../../widgets/buyer/payment_option.dart';
-import '../../../widgets/common/custom_button.dart';
-import '../../../widgets/common/toast_message.dart';
+// import 'package:provider/provider.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/providers/cart_provider.dart';
+import 'package:phsar_kaksekor_app/providers/order_provider.dart';
+import 'package:phsar_kaksekor_app/widgets/buyer/cart_item.dart';
+import 'package:phsar_kaksekor_app/widgets/buyer/payment_option.dart';
+import 'package:phsar_kaksekor_app/widgets/common/custom_button.dart';
+import 'package:phsar_kaksekor_app/widgets/common/toast_message.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../providers/auth_provider.dart';
-import '../../../providers/user_provider.dart';
-import '../../../models/user_model.dart';
-import '../../../widgets/common/profile_section.dart';
-import '../../../widgets/common/action_row.dart';
-import '../../../widgets/common/toggle_switch.dart';
-import '../../../widgets/common/toast_message.dart';
+// import 'package:provider/provider.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/providers/auth_provider.dart';
+import 'package:phsar_kaksekor_app/providers/user_provider.dart';
+import 'package:phsar_kaksekor_app/models/user_model.dart';
+import 'package:phsar_kaksekor_app/widgets/common/profile_section.dart';
+import 'package:phsar_kaksekor_app/widgets/common/action_row.dart';
+import 'package:phsar_kaksekor_app/widgets/common/toggle_switch.dart';
+import 'package:phsar_kaksekor_app/widgets/common/toast_message.dart';
 
 class BuyerProfileScreen extends StatelessWidget {
   const BuyerProfileScreen({super.key});

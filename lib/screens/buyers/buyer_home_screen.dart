@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../providers/cart_provider.dart';
-import '../../../providers/product_provider.dart';
-import '../../../providers/order_provider.dart';
-import '../../../providers/auth_provider.dart';
-import '../../../widgets/buyer/product_card.dart';
-import '../../../widgets/buyer/order_card_buyer.dart';
-import '../orders/buyer_orders_modal.dart';
-import '../browse/browse_screen.dart';
-import '../cart/cart_screen.dart';
-import '../profile/buyer_profile_screen.dart';
+// import 'package:providers/provider.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/providers/cart_provider.dart';
+import 'package:phsar_kaksekor_app/providers/product_provider.dart';
+import 'package:phsar_kaksekor_app/providers/order_provider.dart';
+import 'package:phsar_kaksekor_app/providers/auth_provider.dart';
+// import 'package:phsar_kaksekor_app/widgets/buyer/product_card.dart';
+import 'package:phsar_kaksekor_app/widgets/buyer/order_card_buyer.dart';
+import 'package:phsar_kaksekor_app/modals/buyer_orders_modal.dart';
+import 'package:phsar_kaksekor_app/screens/buyers/browse_screen.dart';
+import 'package:phsar_kaksekor_app/screens/buyers/cart_screen.dart';
+import 'package:phsar_kaksekor_app/screens/buyers/buyer_profile_screen.dart';
 
 class BuyerHomeScreen extends StatefulWidget {
   const BuyerHomeScreen({super.key});
