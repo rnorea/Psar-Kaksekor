@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:phsar_kaksekor_app/provider/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:phsar_kaksekor_app/core/themes/app_theme.dart';
 import 'routes.dart';
 import 'package:phsar_kaksekor_app/providers/auth_provider.dart';

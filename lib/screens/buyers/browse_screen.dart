@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../providers/product_provider.dart';
-import '../../../widgets/buyer/farm_pill.dart';
-import '../../../widgets/buyer/product_search_item.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/providers/product_provider.dart';
+import 'package:phsar_kaksekor_app/widgets/buyer/farm_pill.dart';
+import 'package:phsar_kaksekor_app/widgets/buyer/product_search_item.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});

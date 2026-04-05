@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../providers/order_provider.dart';
-import '../../../widgets/buyer/order_card_buyer.dart';
-import '../../../widgets/common/bottom_sheet_handle.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/providers/order_provider.dart';
+import 'package:phsar_kaksekor_app/widgets/buyer/order_card_buyer.dart';
+import 'package:phsar_kaksekor_app/widgets/common/bottom_sheet_handle.dart';
 
 class BuyerOrdersModal extends StatefulWidget {
   const BuyerOrdersModal({super.key});
