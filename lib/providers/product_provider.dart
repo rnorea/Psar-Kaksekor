@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/product_model.dart';
+import '../models/farm_model.dart';
 
 class ProductProvider extends ChangeNotifier {
   List<ProductModel> _products = [];
   List<ProductModel> _trendingProducts = [];
+  List<FarmModel> _farms = [];
   String _selectedCategory = 'all';
   String _searchQuery = '';
 
   List<ProductModel> get products => _products;
   List<ProductModel> get trendingProducts => _trendingProducts;
+  List<FarmModel> get farms => _farms;
   String get selectedCategory => _selectedCategory;
   String get searchQuery => _searchQuery;
 
@@ -46,12 +49,17 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setFarms(List<FarmModel> farms) {
+    _farms = farms;
+    notifyListeners();
+  }
+
   void setCategory(String category) {
     _selectedCategory = category;
     notifyListeners();
   }
 
-  void setSearchQuery(String query) {
+  void setQuery(String query) {
     _searchQuery = query;
     notifyListeners();
   }

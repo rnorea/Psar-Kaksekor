@@ -90,16 +90,16 @@ class _BrowseScreenState extends State<BrowseScreen> {
               prefixIcon: const Icon(Icons.search, color: colorG400, size: 16),
               suffixIcon: _isSearching
                   ? GestureDetector(
-                      onTap: () {
-                        _searchCtrl.clear();
-                        context.read<ProductProvider>().setQuery('');
-                        setState(() => _isSearching = false);
-                      },
-                      child: const Icon(Icons.close, color: colorG400, size: 16),
-                    )
+                onTap: () {
+                  _searchCtrl.clear();
+                  context.read<ProductProvider>().setQuery('');
+                  setState(() => _isSearching = false);
+                },
+                child: const Icon(Icons.close, color: colorG400, size: 16),
+              )
                   : null,
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kRadiusInput),
                 borderSide: const BorderSide(color: Colors.white24, width: 1.5),
@@ -135,8 +135,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
               decoration: BoxDecoration(
                 color: isActive ? colorDark : colorG100,
                 borderRadius: BorderRadius.circular(kRadiusChip),
@@ -157,7 +156,6 @@ class _BrowseScreenState extends State<BrowseScreen> {
   Widget _buildFarmsSection() {
     return Consumer<ProductProvider>(
       builder: (context, provider, _) {
-        // farms come from your FarmModel list (inject via provider or pass as mock)
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -169,7 +167,10 @@ class _BrowseScreenState extends State<BrowseScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: provider.farms.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemBuilder: (_, i) => FarmPill(farm: provider.farms[i]),
+                itemBuilder: (_, i) => FarmPill(
+                  farm: provider.farms[i],
+                  onTap: () {}, // wire to product detail later
+                ),
               ),
             ),
           ],
@@ -194,8 +195,8 @@ class _BrowseScreenState extends State<BrowseScreen> {
               separatorBuilder: (_, __) => const SizedBox(height: kListGap),
               itemBuilder: (_, i) => ProductSearchItem(
                 product: trending[i],
-                rank: i + 1,
-                showRank: true,
+                rank: i + 1,       // ← removed showRank, use rank directly
+                onTap: () {},       // ← wire to product detail later
               ),
             ),
           ],
@@ -236,7 +237,8 @@ class _BrowseScreenState extends State<BrowseScreen> {
               separatorBuilder: (_, __) => const SizedBox(height: kListGap),
               itemBuilder: (_, i) => ProductSearchItem(
                 product: results[i],
-                showRank: false,
+                // ← no rank passed = no rank shown, no showRank needed
+                onTap: () {},       // ← wire to product detail later
               ),
             ),
           ],

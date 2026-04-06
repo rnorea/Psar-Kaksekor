@@ -9,7 +9,6 @@ import 'package:phsar_kaksekor_app/models/user_model.dart';
 import 'package:phsar_kaksekor_app/widgets/common/profile_section.dart';
 import 'package:phsar_kaksekor_app/widgets/common/action_row.dart';
 import 'package:phsar_kaksekor_app/widgets/common/toggle_switch.dart';
-import 'package:phsar_kaksekor_app/widgets/common/toast_message.dart';
 
 class BuyerProfileScreen extends StatelessWidget {
   const BuyerProfileScreen({super.key});
@@ -28,7 +27,7 @@ class BuyerProfileScreen extends StatelessWidget {
                 _buildProfileHeader(profile),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
-                    kScreenPadding, kSectionGap, kScreenPadding, 0),
+                      kScreenPadding, kSectionGap, kScreenPadding, 0),
                   child: Column(
                     children: [
                       _buildAccountInfo(profile),
@@ -61,7 +60,6 @@ class BuyerProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(15, kHeaderPaddingTop, 15, 22),
       child: Column(
         children: [
-          // Large avatar
           Container(
             width: kAvatarLarge,
             height: kAvatarLarge,
@@ -85,7 +83,6 @@ class BuyerProfileScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(profile.email, style: metaText.copyWith(color: colorG400)),
           const SizedBox(height: 10),
-          // Role chip
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
@@ -123,10 +120,19 @@ class BuyerProfileScreen extends StatelessWidget {
     return ProfileSection(
       title: 'Preferences',
       rows: [
-        _toggleRow('🔔', 'Notifications', user.notificationsEnabled, (v) {
-          user.toggleNotifications(v);
-        }),
-        _arrowRow('🌐', 'Language', 'English', isLast: true, onTap: () {}),
+        _toggleRow(
+          '🔔',
+          'Notifications',
+          user.notificationsEnabled,
+              (_) => user.toggleNotifications(),
+        ),
+        _toggleRow(
+          '📱',
+          'SMS Alerts',
+          user.smsEnabled,
+              (_) => user.toggleSms(),
+          isLast: true,
+        ),
       ],
     );
   }
@@ -179,13 +185,14 @@ class BuyerProfileScreen extends StatelessWidget {
       ),
       onPressed: () {
         auth.switchRole(UserRole.seller);
-        showToast(context, '🌾 Switched to Seller mode');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('🌾 Switched to Seller mode')),
+        );
       },
       child: const Text('Switch to Seller Mode'),
     );
   }
 
-  // Helper row builders
   Widget _profileRow(String icon, String label, String value,
       {bool isLast = false}) {
     return Container(
@@ -194,8 +201,8 @@ class BuyerProfileScreen extends StatelessWidget {
         border: isLast
             ? null
             : const Border(
-                bottom: BorderSide(color: colorG100, width: 1),
-              ),
+          bottom: BorderSide(color: colorG100, width: 1),
+        ),
       ),
       child: Row(
         children: [
@@ -212,16 +219,20 @@ class BuyerProfileScreen extends StatelessWidget {
   }
 
   Widget _toggleRow(
-      String icon, String label, bool value, ValueChanged<bool> onChange,
-      {bool isLast = false}) {
+      String icon,
+      String label,
+      bool value,
+      ValueChanged<bool> onChange, {
+        bool isLast = false,
+      }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: kRowPaddingV),
       decoration: BoxDecoration(
         border: isLast
             ? null
             : const Border(
-                bottom: BorderSide(color: colorG100, width: 1),
-              ),
+          bottom: BorderSide(color: colorG100, width: 1),
+        ),
       ),
       child: Row(
         children: [
@@ -229,7 +240,7 @@ class BuyerProfileScreen extends StatelessWidget {
           const SizedBox(width: 6),
           Text(label, style: bodySmall.copyWith(color: colorG600)),
           const Spacer(),
-          ToggleSwitch(isOn: value, onChanged: onChange),
+          ToggleSwitch(value: value, onChanged: onChange),
         ],
       ),
     );
@@ -245,8 +256,8 @@ class BuyerProfileScreen extends StatelessWidget {
           border: isLast
               ? null
               : const Border(
-                  bottom: BorderSide(color: colorG100, width: 1),
-                ),
+            bottom: BorderSide(color: colorG100, width: 1),
+          ),
         ),
         child: Row(
           children: [
@@ -256,8 +267,7 @@ class BuyerProfileScreen extends StatelessWidget {
             const Spacer(),
             Text(value, style: bodySmall),
             const SizedBox(width: 4),
-            const Text('›',
-                style: TextStyle(fontSize: 11, color: colorG400)),
+            const Text('›', style: TextStyle(fontSize: 11, color: colorG400)),
           ],
         ),
       ),
@@ -269,7 +279,8 @@ class BuyerProfileScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(kRadiusModal)),
+        borderRadius:
+        BorderRadius.vertical(top: Radius.circular(kRadiusModal)),
       ),
       builder: (_) => Padding(
         padding: const EdgeInsets.fromLTRB(15, 14, 15, 30),

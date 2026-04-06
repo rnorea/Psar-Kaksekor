@@ -5,10 +5,9 @@ import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
 import 'package:phsar_kaksekor_app/providers/cart_provider.dart';
 import 'package:phsar_kaksekor_app/providers/order_provider.dart';
+import 'package:phsar_kaksekor_app/providers/auth_provider.dart';
 import 'package:phsar_kaksekor_app/widgets/buyer/cart_item.dart';
 import 'package:phsar_kaksekor_app/widgets/buyer/payment_option.dart';
-import 'package:phsar_kaksekor_app/widgets/common/custom_button.dart';
-import 'package:phsar_kaksekor_app/widgets/common/toast_message.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -63,8 +62,7 @@ class _CartScreenState extends State<CartScreen> {
           Text('🛒 My Cart', style: titleLarge),
           if (cart.itemCount > 0)
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
               decoration: BoxDecoration(
                 color: colorYellow,
                 borderRadius: BorderRadius.circular(kRadiusBadge),
@@ -91,47 +89,40 @@ class _CartScreenState extends State<CartScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: kSectionGap),
-          // Cart items list
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: cart.items.length,
             separatorBuilder: (_, __) => const SizedBox(height: kListGap),
-            itemBuilder: (_, i) => CartItemWidget(
-              item: cart.items[i],
-              onDelete: () =>
-                  context.read<CartProvider>().removeItem(cart.items[i].productId),
-            ),
+            itemBuilder: (context, i) {
+              final item = cart.items[i];
+              return CartItemWidget(
+                item: item,
+                onDelete: () =>
+                    context.read<CartProvider>().removeItem(item.productId),
+              );
+            },
           ),
           const SizedBox(height: kSectionGap),
-
-          // Payment method
           Text('Payment Method', style: sectionTitle),
           const SizedBox(height: 9),
           Row(
             children: _paymentMethods.map((method) {
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    right: method != _paymentMethods.last ? 7 : 0,
-                  ),
-                  child: PaymentOption(
-                    label: method['label']!,
-                    isSelected: _selectedPayment == method['value'],
-                    onSelect: (_) =>
-                        setState(() => _selectedPayment = method['value']!),
-                  ),
+              final isLast = method == _paymentMethods.last;
+              return Padding(
+                padding: EdgeInsets.only(right: isLast ? 0 : 7),
+                child: PaymentOption(
+                  label: method['label']!,
+                  isSelected: _selectedPayment == method['value'],
+                  onTap: () =>
+                      setState(() => _selectedPayment = method['value']!),
                 ),
               );
             }).toList(),
           ),
           const SizedBox(height: kSectionGap),
-
-          // Price summary
           _buildPriceSummary(cart),
           const SizedBox(height: kSectionGap),
-
-          // Place order button
           _buildPlaceOrderButton(cart),
           const SizedBox(height: 80),
         ],
@@ -149,12 +140,11 @@ class _CartScreenState extends State<CartScreen> {
       padding: const EdgeInsets.all(kCardPadding + 2),
       child: Column(
         children: [
-          _priceRow('Subtotal', '\$${cart.subtotal.toStringAsFixed(2)}', false),
+          _priceRow('Subtotal', '\$${cart.subtotal.toStringAsFixed(2)}'),
           const SizedBox(height: 7),
-          _priceRow('Delivery fee', '\$0.50', false),
+          _priceRow('Delivery fee', '\$${cart.deliveryFee.toStringAsFixed(2)}'),
           const SizedBox(height: 7),
-          _priceRow(
-              'Service fee (5%)', '\$${cart.fee.toStringAsFixed(2)}', false),
+          _priceRow('Service fee (5%)', '\$${cart.platformFee.toStringAsFixed(2)}'),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 9),
             child: Divider(color: colorG200, height: 1),
@@ -163,10 +153,7 @@ class _CartScreenState extends State<CartScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Total', style: titleMed),
-              Text(
-                '\$${cart.total.toStringAsFixed(2)}',
-                style: priceXL,
-              ),
+              Text('\$${cart.total.toStringAsFixed(2)}', style: priceXL),
             ],
           ),
         ],
@@ -174,15 +161,12 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _priceRow(String label, String value, bool isBold) {
+  Widget _priceRow(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: bodySmall),
-        Text(
-          value,
-          style: isBold ? titleSmall : bodyMed,
-        ),
+        Text(value, style: bodyMed),
       ],
     );
   }
@@ -197,7 +181,9 @@ class _CartScreenState extends State<CartScreen> {
             borderRadius: BorderRadius.circular(kRadiusBtn)),
         elevation: 0,
         textStyle: const TextStyle(
-            fontFamily: 'Nunito', fontWeight: FontWeight.w900, fontSize: 12.5),
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w900,
+            fontSize: 12.5),
       ),
       onPressed: () => _placeOrder(cart),
       child: Text('✓ Place Order — \$${cart.total.toStringAsFixed(2)}'),
@@ -205,11 +191,23 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void _placeOrder(CartProvider cart) {
-    context
-        .read<OrderProvider>()
-        .placeOrder(cart.items, _selectedPayment);
+    final auth = context.read<AuthProvider>();
+    final user = auth.currentUser;
+
+    context.read<OrderProvider>().placeOrder(
+      id: '#ORD-${DateTime.now().millisecondsSinceEpoch}',
+      farmName: 'Psar Kaksekor',
+      items: cart.items.toList(),
+      total: cart.total,
+      buyerName: user?.name ?? 'Guest',
+      deliveryAddress: user?.location ?? 'Phnom Penh',
+    );
+
     cart.clearCart();
-    showToast(context, '🎉 Order placed successfully!');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('🎉 Order placed successfully!')),
+    );
   }
 
   Widget _buildEmptyState() {
@@ -238,10 +236,7 @@ class _CartScreenState extends State<CartScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(kRadiusBtn)),
                 ),
-                onPressed: () {
-                  // Switch bottom nav to Browse tab (index 1)
-                  // Parent BuyerHomeScreen handles this via IndexedStack
-                },
+                onPressed: () {},
                 child: const Text('Browse Products'),
               ),
             ),

@@ -9,10 +9,10 @@ class OrderProvider extends ChangeNotifier {
   List<OrderModel> get buyerOrders => List.unmodifiable(_buyerOrders);
   List<OrderModel> get sellerOrders => List.unmodifiable(_sellerOrders);
 
-  List<OrderModel> get activeBuyerOrders =>
+  List<OrderModel> get activeOrders =>
       _buyerOrders.where((o) => o.status.isActive).toList();
 
-  List<OrderModel> get deliveredBuyerOrders =>
+  List<OrderModel> get deliveredOrders =>
       _buyerOrders.where((o) => o.status == OrderStatus.delivered).toList();
 
   List<OrderModel> sellerOrdersByStatus(OrderStatus status) =>

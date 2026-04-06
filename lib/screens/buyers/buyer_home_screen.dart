@@ -248,7 +248,10 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
             childAspectRatio: 0.85,
           ),
           itemCount: products.length,
-          itemBuilder: (_, i) => ProductCard(product: products[i]),
+          itemBuilder: (_, i) => ProductCard(
+              product: products[i],
+            onTap: () {},
+          ),
         );
       },
     );
@@ -299,12 +302,18 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
     );
   }
 
+  // void _openOrdersModal() {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (_) => const BuyerOrdersModal(),
+  //   );
+  // }
   void _openOrdersModal() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const BuyerOrdersModal(),
+    showBuyerOrders(
+      context,
+      context.read<OrderProvider>().buyerOrders,
     );
   }
 

@@ -38,6 +38,7 @@ class ProductSearchItem extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
+            if (rank != null) const SizedBox(width: 6),
             Container(
               width: 40,
               height: 40,
@@ -56,7 +57,10 @@ class ProductSearchItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(product.name, style: titleSmall.copyWith(fontSize: 11)),
+                  Text(
+                    product.name,
+                    style: titleSmall.copyWith(fontSize: 11),
+                  ),
                   Text(product.farmName, style: metaText),
                 ],
               ),
