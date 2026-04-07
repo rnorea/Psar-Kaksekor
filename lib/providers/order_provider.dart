@@ -3,6 +3,7 @@ import '../models/order_model.dart';
 import '../models/cart_item_model.dart';
 
 class OrderProvider extends ChangeNotifier {
+
   List<OrderModel> _buyerOrders = [];
   List<OrderModel> _sellerOrders = [];
 
@@ -17,6 +18,8 @@ class OrderProvider extends ChangeNotifier {
 
   List<OrderModel> sellerOrdersByStatus(OrderStatus status) =>
       _sellerOrders.where((o) => o.status == status).toList();
+
+  void advanceOrder(String orderId) => advanceSellerOrder(orderId);
 
   void setBuyerOrders(List<OrderModel> orders) {
     _buyerOrders = orders;

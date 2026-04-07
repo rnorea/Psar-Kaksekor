@@ -10,9 +10,9 @@ import '../../widgets/common/toggle_switch.dart';
 import '../../widgets/common/action_row.dart';
 import '../../widgets/seller/earnings_card.dart';
 import '../../widgets/seller/linked_account_chip.dart';
-import '../seller/products/my_products_modal.dart';
-import '../seller/products/add_product_modal.dart';
-import '../seller/orders/seller_orders_modal.dart';
+import 'my_products_modal.dart';
+import 'add_product_modal.dart';
+import 'seller_orders_modal.dart';
 
 class SellerProfileScreen extends StatefulWidget {
   const SellerProfileScreen({super.key});
@@ -274,20 +274,12 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                       _ProfileRow(
                         label: '🔔 Notifications',
                         isLast: false,
-                        valueWidget: ToggleSwitch(
-                          isOn: _notificationsOn,
-                          onChanged: (v) =>
-                              setState(() => _notificationsOn = v),
-                        ),
+                        valueWidget: ToggleSwitch(value: _notificationsOn, onChanged: (v) => setState(() => _notificationsOn = v)),
                       ),
                       _ProfileRow(
                         label: '💬 SMS Alerts',
                         isLast: false,
-                        valueWidget: ToggleSwitch(
-                          isOn: _smsAlertsOn,
-                          onChanged: (v) =>
-                              setState(() => _smsAlertsOn = v),
-                        ),
+                        valueWidget: ToggleSwitch(value: _smsAlertsOn, onChanged: (v) => setState(() => _smsAlertsOn = v)),
                       ),
                       _ProfileRow(
                         label: '🌐 Language',
@@ -421,7 +413,7 @@ class _ProfileHero extends StatelessWidget {
           // Role toggle
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
+              color: Colors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(kRadiusChip),
             ),
             padding: const EdgeInsets.all(3),

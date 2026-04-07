@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_constants.dart';
-import '../../core/constants/app_text_styles.dart';
-import '../../models/order_model.dart';
-import '../../providers/order_provider.dart';
-import '../../providers/product_provider.dart';
-import '../../providers/auth_provider.dart';
-import '../../widgets/seller/stat_card.dart';
-import '../../widgets/common/status_badge.dart';
-import '../seller/products/my_products_modal.dart';
-import '../seller/products/add_product_modal.dart';
-import '../seller/orders/seller_orders_modal.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
+import 'package:phsar_kaksekor_app/providers/order_provider.dart';
+import 'package:phsar_kaksekor_app/providers/product_provider.dart';
+import 'package:phsar_kaksekor_app/providers/auth_provider.dart';
+import 'package:phsar_kaksekor_app/widgets/seller/stat_card.dart';
+import 'package:phsar_kaksekor_app/widgets/common/status_badge.dart';
+import 'package:phsar_kaksekor_app/screens/seller/my_products_modal.dart';
+import 'package:phsar_kaksekor_app/screens/seller/add_product_modal.dart';
+import 'package:phsar_kaksekor_app/screens/seller/seller_orders_modal.dart';
 import 'package:provider/provider.dart';
+import 'package:phsar_kaksekor_app/models/order_model.dart';
 
 class SellerDashboardScreen extends StatelessWidget {
   const SellerDashboardScreen({super.key});
@@ -70,7 +70,7 @@ class SellerDashboardScreen extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'DM Sans',
                     fontSize: 10,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
                 const SizedBox(height: 3),

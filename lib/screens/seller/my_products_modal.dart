@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../models/product_model.dart';
-import '../../../providers/product_provider.dart';
-import '../../../widgets/common/bottom_sheet_handle.dart';
-import '../../../widgets/seller/product_list_tile.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/models/product_model.dart';
+import 'package:phsar_kaksekor_app/providers/product_provider.dart';
+import 'package:phsar_kaksekor_app/widgets/common/bottom_sheet_handle.dart';
+import 'package:phsar_kaksekor_app/widgets/seller/product_list_tile.dart';
 import 'add_product_modal.dart';
 
 class MyProductsModal extends StatelessWidget {

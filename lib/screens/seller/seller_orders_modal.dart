@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../models/order_model.dart';
-import '../../../providers/order_provider.dart';
-import '../../../widgets/common/bottom_sheet_handle.dart';
-import '../../../widgets/common/status_badge.dart';
-import '../../../widgets/common/progress_tracker.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
+import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
+import 'package:phsar_kaksekor_app/models/order_model.dart';
+import 'package:phsar_kaksekor_app/providers/order_provider.dart';
+import 'package:phsar_kaksekor_app/widgets/common/bottom_sheet_handle.dart';
+import 'package:phsar_kaksekor_app/widgets/common/status_badge.dart';
+import 'package:phsar_kaksekor_app/widgets/common/progress_tracker.dart';
 
 class SellerOrdersModal extends StatefulWidget {
   const SellerOrdersModal({super.key});

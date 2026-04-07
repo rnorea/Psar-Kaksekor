@@ -68,4 +68,24 @@ class ProductProvider extends ChangeNotifier {
     _searchQuery = '';
     notifyListeners();
   }
+
+  List<ProductModel> get allProducts => _products;
+
+  void addProduct(ProductModel product) {
+    _products.add(product);
+    notifyListeners();
+  }
+
+  void updateProduct(ProductModel product) {
+    final index = _products.indexWhere((p) => p.id == product.id);
+    if (index >= 0) {
+      _products[index] = product;
+      notifyListeners();
+    }
+  }
+
+  void removeProduct(String productId) {
+    _products.removeWhere((p) => p.id == productId);
+    notifyListeners();
+  }
 }
