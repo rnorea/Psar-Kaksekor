@@ -9,36 +9,47 @@ class ProductProvider extends ChangeNotifier {
   String _selectedCategory = 'all';
   String _searchQuery = '';
 
-  List<ProductModel> get products => _products;
+  // ── Getters ──────────────────────────────────────────────────────────────
+  List<ProductModel> get products        => _products;
+  List<ProductModel> get allProducts     => _products; // alias
   List<ProductModel> get trendingProducts => _trendingProducts;
-  List<FarmModel> get farms => _farms;
-  String get selectedCategory => _selectedCategory;
-  String get searchQuery => _searchQuery;
+  List<FarmModel>    get farms           => _farms;
+  String get selectedCategory            => _selectedCategory;
+  String get searchQuery                 => _searchQuery;
+
+  // Maps chip display labels → product category keys
+  static const _categoryMap = {
+    'all':            'all',
+    'All':            'all',
+    '🥦 Vegetables':  'veg',
+    '🌾 Grains':      'grain',
+    '🌾 Grains & Rice': 'grain',
+    '🍎 Fruits':      'fruit',
+    '🌿 Herbs':       'herb',
+    '🥚 Eggs':        'dairy',
+    '🥚 Eggs & Dairy': 'dairy',
+  };
 
   List<ProductModel> get filteredProducts {
     List<ProductModel> result = _products;
-    if (_selectedCategory != 'all') {
-      result = result.where((p) => p.category == _selectedCategory).toList();
+
+    // Resolve chip label to category key (e.g. '🥦 Vegetables' → 'veg')
+    final catKey = _categoryMap[_selectedCategory] ?? _selectedCategory;
+
+    if (catKey != 'all') {
+      result = result.where((p) => p.category == catKey).toList();
     }
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
       result = result.where((p) =>
-      p.name.toLowerCase().contains(q) ||
-          p.farmName.toLowerCase().contains(q)
+        p.name.toLowerCase().contains(q) ||
+        p.farmName.toLowerCase().contains(q)
       ).toList();
     }
     return result;
   }
 
-  List<ProductModel> get searchResults {
-    if (_searchQuery.isEmpty) return [];
-    final q = _searchQuery.toLowerCase();
-    return _products.where((p) =>
-    p.name.toLowerCase().contains(q) ||
-        p.farmName.toLowerCase().contains(q)
-    ).toList();
-  }
-
+  // ── Setters ──────────────────────────────────────────────────────────────
   void setProducts(List<ProductModel> products) {
     _products = products;
     notifyListeners();
@@ -59,33 +70,32 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setQuery(String query) {
+  void setSearchQuery(String query) {
     _searchQuery = query;
     notifyListeners();
   }
+
+  // alias used in browse_screen
+  void setQuery(String query) => setSearchQuery(query);
 
   void clearSearch() {
     _searchQuery = '';
     notifyListeners();
   }
 
-  List<ProductModel> get allProducts => _products;
-
+  // ── CRUD (used by seller screens) ────────────────────────────────────────
   void addProduct(ProductModel product) {
-    _products.add(product);
+    _products = [product, ..._products];
     notifyListeners();
   }
 
-  void updateProduct(ProductModel product) {
-    final index = _products.indexWhere((p) => p.id == product.id);
-    if (index >= 0) {
-      _products[index] = product;
-      notifyListeners();
-    }
+  void updateProduct(ProductModel updated) {
+    _products = _products.map((p) => p.id == updated.id ? updated : p).toList();
+    notifyListeners();
   }
 
-  void removeProduct(String productId) {
-    _products.removeWhere((p) => p.id == productId);
+  void removeProduct(String id) {
+    _products = _products.where((p) => p.id != id).toList();
     notifyListeners();
   }
 }
