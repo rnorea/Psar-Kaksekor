@@ -8,6 +8,7 @@ import '../providers/product_provider.dart';
 import '../providers/order_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../providers/cart_provider.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRODUCTS
@@ -470,18 +471,21 @@ void seedMockData({
   required AuthProvider authProvider,
   required UserProvider userProvider,
 }) {
-  // Products + trending (top 5 by rating)
+  // Products + trending
   productProvider.setProducts(mockProducts);
   final trending = [...mockProducts]
     ..sort((a, b) => b.rating.compareTo(a.rating));
   productProvider.setTrendingProducts(trending.take(5).toList());
   productProvider.setFarms(mockFarms);
-
+ 
   // Orders
   orderProvider.setBuyerOrders(mockBuyerOrders);
   orderProvider.setSellerOrders(mockSellerOrders);
-
-  // Logged-in user (buyer by default)
-  authProvider.setUser(mockBuyerUser);
-  userProvider.setProfile(mockBuyerUser);
+ 
+  // Register demo users so they can log in — but do NOT auto-login
+  authProvider.seedUsers([
+  mockBuyerUser,
+  mockSellerUser,
+]);
 }
+ 
