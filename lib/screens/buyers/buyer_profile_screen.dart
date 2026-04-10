@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phsar_kaksekor_app/data/mock_data.dart';
 import 'package:provider/provider.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
@@ -27,7 +28,11 @@ class BuyerProfileScreen extends StatelessWidget {
                 _buildProfileHeader(profile),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
-                      kScreenPadding, kSectionGap, kScreenPadding, 0),
+                    kScreenPadding,
+                    kSectionGap,
+                    kScreenPadding,
+                    0,
+                  ),
                   child: Column(
                     children: [
                       _buildAccountInfo(profile),
@@ -124,13 +129,13 @@ class BuyerProfileScreen extends StatelessWidget {
           '🔔',
           'Notifications',
           user.notificationsEnabled,
-              (_) => user.toggleNotifications(),
+          (_) => user.toggleNotifications(),
         ),
         _toggleRow(
           '📱',
           'SMS Alerts',
           user.smsEnabled,
-              (_) => user.toggleSms(),
+          (_) => user.toggleSms(),
           isLast: true,
         ),
       ],
@@ -178,13 +183,18 @@ class BuyerProfileScreen extends StatelessWidget {
         minimumSize: const Size(double.infinity, 42),
         side: const BorderSide(color: colorG200, width: 1.5),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(kRadiusBtn)),
+          borderRadius: BorderRadius.circular(kRadiusBtn),
+        ),
         elevation: 0,
         textStyle: const TextStyle(
-            fontFamily: 'DM Sans', fontWeight: FontWeight.w700, fontSize: 12),
+          fontFamily: 'DM Sans',
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+        ),
       ),
       onPressed: () {
         auth.switchRole(UserRole.seller);
+        auth.setUser(mockSellerUser);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('🌾 Switched to Seller mode')),
         );
@@ -193,16 +203,18 @@ class BuyerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _profileRow(String icon, String label, String value,
-      {bool isLast = false}) {
+  Widget _profileRow(
+    String icon,
+    String label,
+    String value, {
+    bool isLast = false,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: kRowPaddingV),
       decoration: BoxDecoration(
         border: isLast
             ? null
-            : const Border(
-          bottom: BorderSide(color: colorG100, width: 1),
-        ),
+            : const Border(bottom: BorderSide(color: colorG100, width: 1)),
       ),
       child: Row(
         children: [
@@ -210,29 +222,31 @@ class BuyerProfileScreen extends StatelessWidget {
           const SizedBox(width: 6),
           Text(label, style: bodySmall.copyWith(color: colorG600)),
           const Spacer(),
-          Text(value,
-              style: bodyMed.copyWith(
-                  fontFamily: 'Nunito', fontWeight: FontWeight.w600)),
+          Text(
+            value,
+            style: bodyMed.copyWith(
+              fontFamily: 'Nunito',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _toggleRow(
-      String icon,
-      String label,
-      bool value,
-      ValueChanged<bool> onChange, {
-        bool isLast = false,
-      }) {
+    String icon,
+    String label,
+    bool value,
+    ValueChanged<bool> onChange, {
+    bool isLast = false,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: kRowPaddingV),
       decoration: BoxDecoration(
         border: isLast
             ? null
-            : const Border(
-          bottom: BorderSide(color: colorG100, width: 1),
-        ),
+            : const Border(bottom: BorderSide(color: colorG100, width: 1)),
       ),
       child: Row(
         children: [
@@ -246,8 +260,13 @@ class BuyerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _arrowRow(String icon, String label, String value,
-      {bool isLast = false, required VoidCallback onTap}) {
+  Widget _arrowRow(
+    String icon,
+    String label,
+    String value, {
+    bool isLast = false,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -255,9 +274,7 @@ class BuyerProfileScreen extends StatelessWidget {
         decoration: BoxDecoration(
           border: isLast
               ? null
-              : const Border(
-            bottom: BorderSide(color: colorG100, width: 1),
-          ),
+              : const Border(bottom: BorderSide(color: colorG100, width: 1)),
         ),
         child: Row(
           children: [
@@ -279,8 +296,7 @@ class BuyerProfileScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius:
-        BorderRadius.vertical(top: Radius.circular(kRadiusModal)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(kRadiusModal)),
       ),
       builder: (_) => Padding(
         padding: const EdgeInsets.fromLTRB(15, 14, 15, 30),
@@ -306,7 +322,8 @@ class BuyerProfileScreen extends StatelessWidget {
                 foregroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 44),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(kRadiusBtn)),
+                  borderRadius: BorderRadius.circular(kRadiusBtn),
+                ),
                 elevation: 0,
               ),
               onPressed: () {
@@ -322,7 +339,8 @@ class BuyerProfileScreen extends StatelessWidget {
                 minimumSize: const Size(double.infinity, 44),
                 side: const BorderSide(color: colorG200),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(kRadiusBtn)),
+                  borderRadius: BorderRadius.circular(kRadiusBtn),
+                ),
               ),
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),

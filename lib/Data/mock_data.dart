@@ -438,12 +438,12 @@ final List<OrderModel> mockSellerOrders = [
 
 final UserModel mockBuyerUser = UserModel(
   id: 'u1',
-  name: 'Vanuth',
-  email: 'vanuth@example.com',
+  name: 'Sopheak',
+  email: 'sopheak@example.com',
   phone: '+855 12 345 678',
   location: 'Toul Kork, Phnom Penh',
   role: UserRole.buyer,
-  avatarInitial: 'V',
+  avatarInitial: 'S',
 );
 
 final UserModel mockSellerUser = UserModel(

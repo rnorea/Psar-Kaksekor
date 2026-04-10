@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phsar_kaksekor_app/modals/product_detail_modal.dart';
 import 'package:provider/provider.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
@@ -250,7 +251,10 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
           itemCount: products.length,
           itemBuilder: (_, i) => ProductCard(
               product: products[i],
-            onTap: () {},
+            onTap: () =>  showProductDetail(
+              context,
+               products[i], 
+               (qrt)=> context.read<CartProvider>().addItem(products[i], qrt),)
           ),
         );
       },

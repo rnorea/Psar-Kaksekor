@@ -8,42 +8,42 @@ import 'package:phsar_kaksekor_app/providers/order_provider.dart';
 import 'package:phsar_kaksekor_app/providers/user_provider.dart';
 import 'package:phsar_kaksekor_app/data/mock_data.dart';
 import 'routes.dart';
+import 'package:phsar_kaksekor_app/models/user_model.dart';
+import 'package:phsar_kaksekor_app/screens/buyers/buyer_home_screen.dart';
+import 'package:phsar_kaksekor_app/screens/seller/seller_dashboard_screen.dart';
 
 class PsarKaksekorApp extends StatelessWidget {
   const PsarKaksekorApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Create providers
-    final authProvider    = AuthProvider();
-    final cartProvider    = CartProvider();
-    final productProvider = ProductProvider();
-    final orderProvider   = OrderProvider();
-    final userProvider    = UserProvider();
-
-    // Seed dummy data
-    seedMockData(
-      productProvider: productProvider,
-      orderProvider:   orderProvider,
-      authProvider:    authProvider,
-      userProvider:    userProvider,
-    );
-
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: authProvider),
-        ChangeNotifierProvider.value(value: cartProvider),
-        ChangeNotifierProvider.value(value: productProvider),
-        ChangeNotifierProvider.value(value: orderProvider),
-        ChangeNotifierProvider.value(value: userProvider),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
         title: 'Psar Kaksekor',
         debugShowCheckedModeBanner: false,
         theme: appTheme,
-        onGenerateRoute: generateRoute,
-        initialRoute: routeBuyerHome,
+        home: const _RootScreen(),
       ),
     );
+  }
+}
+
+class _RootScreen extends StatelessWidget {
+  const _RootScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    final role = context.watch<AuthProvider>().activeRole;
+
+    return role == UserRole.seller
+        ? const SellerDashboardScreen()
+        : const BuyerHomeScreen();
   }
 }
