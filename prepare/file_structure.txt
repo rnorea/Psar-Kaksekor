@@ -24,17 +24,17 @@ lib/
 │   └── user_provider.dart
 ├── screens/
 │   ├── buyer/
-│   │   ├── home/buyer_home_screen.dart
-│   │   ├── browse/browse_screen.dart
-│   │   ├── cart/cart_screen.dart
-│   │   ├── profile/buyer_profile_screen.dart
-│   │   └── orders/buyer_orders_modal.dart
+│   │   ├── buyer_home_screen.dart
+│   │   ├── browse_screen.dart
+│   │   ├── cart_screen.dart
+│   │   ├── buyer_profile_screen.dart
+│   │   └── buyer_orders_modal.dart
 │   └── seller/
-│       ├── dashboard/seller_dashboard_screen.dart
-│       ├── products/my_products_modal.dart
-│       ├── products/add_product_modal.dart
-│       ├── orders/seller_orders_modal.dart
-│       └── profile/seller_profile_screen.dart
+│       ├── seller_dashboard_screen.dart
+│       ├── my_products_modal.dart
+│       ├── add_product_modal.dart
+│       ├── seller_orders_modal.dart
+│       └── seller_profile_screen.dart
 ├── widgets/
 │   ├── common/ (13 files)
 │   ├── buyer/  (6 files)
