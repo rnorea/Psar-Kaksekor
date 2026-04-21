@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
-import 'package:phsar_kaksekor_app/core/constants/app_text_styles.dart';
 import 'package:phsar_kaksekor_app/providers/order_provider.dart';
 import 'package:phsar_kaksekor_app/providers/product_provider.dart';
 import 'package:phsar_kaksekor_app/providers/auth_provider.dart';
 import 'package:phsar_kaksekor_app/widgets/seller/stat_card.dart';
 import 'package:phsar_kaksekor_app/widgets/common/status_badge.dart';
-import 'package:phsar_kaksekor_app/screens/seller/my_products_modal.dart';
-import 'package:phsar_kaksekor_app/screens/seller/add_product_modal.dart';
-import 'package:phsar_kaksekor_app/screens/seller/seller_orders_modal.dart';
+import 'package:phsar_kaksekor_app/modals/my_products_modal.dart';
+import 'package:phsar_kaksekor_app/modals/add_product_modal.dart';
+import 'package:phsar_kaksekor_app/modals/seller_orders_modal.dart';
+import 'package:phsar_kaksekor_app/screens/seller/seller_profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:phsar_kaksekor_app/models/order_model.dart';
 
-class SellerDashboardScreen extends StatelessWidget {
+class SellerDashboardScreen extends StatefulWidget {
   const SellerDashboardScreen({super.key});
 
-  void _openAddProduct(BuildContext context) {
+  @override
+  State<SellerDashboardScreen> createState() => _SellerDashboardScreenState();
+}
+
+class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
+  int _currentTab = 0;
+
+  void _openAddProduct() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,7 +32,7 @@ class SellerDashboardScreen extends StatelessWidget {
     );
   }
 
-  void _openMyProducts(BuildContext context) {
+  void _openMyProducts() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -34,7 +41,7 @@ class SellerDashboardScreen extends StatelessWidget {
     );
   }
 
-  void _openOrders(BuildContext context) {
+  void _openOrders() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -45,49 +52,60 @@ class SellerDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: colorOff,
+      body: IndexedStack(
+        index: _currentTab,
+        children: [
+          _buildDashboardBody(),
+          const SellerProfileScreen(),
+        ],
+      ),
+      bottomNavigationBar: _buildBottomNav(),
+    );
+  }
+
+  Widget _buildDashboardBody() {
     final auth = context.watch<AuthProvider>();
     final orders = context.watch<OrderProvider>();
-    final products = context.watch<ProductProvider>();
 
     final sellerName = auth.currentUser?.name ?? 'Seller';
     final initial = sellerName.isNotEmpty ? sellerName[0].toUpperCase() : 'S';
-
     final recentOrders = orders.sellerOrders.take(3).toList();
 
-    return Scaffold(
-      backgroundColor: colorOff,
-      body: Column(
-        children: [
-          // ── Header (no bottom radius, full dark bg) ──────────────────────
-          Container(
-            color: colorDark,
-            padding: const EdgeInsets.fromLTRB(15, kHeaderPaddingTop, 15, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Good morning,',
-                  style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontSize: 10,
-                    color: Colors.white.withValues(alpha: 0.5),
-                  ),
+    return Column(
+      children: [
+        // ── Header ──────────────────────────────────────────────────────────
+        Container(
+          color: colorDark,
+          padding: const EdgeInsets.fromLTRB(15, kHeaderPaddingTop, 15, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Good morning,',
+                style: TextStyle(
+                  fontFamily: 'DM Sans',
+                  fontSize: 10,
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
-                const SizedBox(height: 3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      sellerName,
-                      style: const TextStyle(
-                        fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+              ),
+              const SizedBox(height: 3),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    sellerName,
+                    style: const TextStyle(
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18,
+                      color: Colors.white,
                     ),
-                    // Avatar
-                    Container(
+                  ),
+                  GestureDetector(
+                    onTap: () => setState(() => _currentTab = 1),
+                    child: Container(
                       width: kAvatarSize,
                       height: kAvatarSize,
                       decoration: const BoxDecoration(
@@ -105,101 +123,146 @@ class SellerDashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 7,
+                mainAxisSpacing: 7,
+                childAspectRatio: 2.2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: const [
+                  StatCard(value: '\$128', label: 'This month'),
+                  StatCard(value: '7', label: 'New orders'),
+                  StatCard(value: '4', label: 'Products listed'),
+                  StatCard(value: '4.8★', label: 'Avg rating'),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        // ── Scrollable body ────────────────────────────────────────────────
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(kScreenPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ActionBtn(
+                        label: '＋ Add Product',
+                        isPrimary: true,
+                        onTap: _openAddProduct,
+                      ),
+                    ),
+                    const SizedBox(width: 7),
+                    Expanded(
+                      child: _ActionBtn(
+                        label: '📦 Products',
+                        isPrimary: false,
+                        onTap: _openMyProducts,
+                      ),
+                    ),
+                    const SizedBox(width: 7),
+                    Expanded(
+                      child: _ActionBtn(
+                        label: '📋 Orders',
+                        isPrimary: false,
+                        onTap: _openOrders,
+                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 14),
-                // 2×2 stat grid
-                GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 7,
-                  mainAxisSpacing: 7,
-                  childAspectRatio: 2.6,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: const [
-                    StatCard(value: '\$128', label: 'This month'),
-                    StatCard(value: '7', label: 'New orders'),
-                    StatCard(value: '4', label: 'Products listed'),
-                    StatCard(value: '4.8★', label: 'Avg rating'),
-                  ],
+                const SizedBox(height: kSectionGap),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 9),
+                  child: Text(
+                    'Recent Orders',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12.5,
+                      color: colorTextDark,
+                    ),
+                  ),
                 ),
+                if (recentOrders.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Text(
+                        'No orders yet',
+                        style: TextStyle(
+                          fontFamily: 'DM Sans',
+                          fontSize: 12,
+                          color: colorG400,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  ...recentOrders.map(
+                        (order) => _CompactOrderCard(order: order),
+                  ),
+                const SizedBox(height: 80),
               ],
             ),
           ),
+        ),
+      ],
+    );
+  }
 
-          // ── Scrollable body ───────────────────────────────────────────────
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(kScreenPadding),
+  Widget _buildBottomNav() {
+    final items = [
+      {'icon': Icons.grid_view_outlined, 'activeIcon': Icons.grid_view, 'label': 'Dashboard'},
+      {'icon': Icons.person_outline, 'activeIcon': Icons.person, 'label': 'Profile'},
+    ];
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: colorG200, width: 1)),
+      ),
+      padding: const EdgeInsets.only(bottom: 8, top: 4),
+      child: Row(
+        children: List.generate(items.length, (i) {
+          final isActive = _currentTab == i;
+          final item = items[i];
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _currentTab = i),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Action buttons row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _ActionBtn(
-                          label: '＋ Add Product',
-                          isPrimary: true,
-                          onTap: () => _openAddProduct(context),
-                        ),
-                      ),
-                      const SizedBox(width: 7),
-                      Expanded(
-                        child: _ActionBtn(
-                          label: '📦 My Products',
-                          isPrimary: false,
-                          onTap: () => _openMyProducts(context),
-                        ),
-                      ),
-                      const SizedBox(width: 7),
-                      Expanded(
-                        child: _ActionBtn(
-                          label: '📋 Orders',
-                          isPrimary: false,
-                          onTap: () => _openOrders(context),
-                        ),
-                      ),
-                    ],
+                  Icon(
+                    isActive
+                        ? item['activeIcon'] as IconData
+                        : item['icon'] as IconData,
+                    color: isActive ? colorAccent : colorG400,
+                    size: kNavIconSize,
                   ),
-                  const SizedBox(height: kSectionGap),
-
-                  // Section title
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 9),
-                    child: Text(
-                      'Recent Orders',
-                      style: TextStyle(
-                        fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12.5,
-                        color: colorTextDark,
-                      ),
+                  const SizedBox(height: 2),
+                  Text(
+                    item['label'] as String,
+                    style: TextStyle(
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 8.5,
+                      color: isActive ? colorAccent : colorG400,
                     ),
                   ),
-
-                  // Recent order cards
-                  if (recentOrders.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Text(
-                          'No orders yet',
-                          style: TextStyle(
-                            fontFamily: 'DM Sans',
-                            fontSize: 12,
-                            color: colorG400,
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    ...recentOrders.map((order) => _CompactOrderCard(order: order)),
                 ],
               ),
             ),
-          ),
-        ],
+          );
+        }),
       ),
     );
   }
@@ -248,19 +311,6 @@ class _CompactOrderCard extends StatelessWidget {
   final OrderModel order;
 
   const _CompactOrderCard({required this.order});
-
-  String get _statusLabel {
-    switch (order.status) {
-      case OrderStatus.pending:
-        return 'Pending';
-      case OrderStatus.confirmed:
-        return 'Confirmed';
-      case OrderStatus.onWay:
-        return 'On the Way';
-      case OrderStatus.delivered:
-        return 'Delivered';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

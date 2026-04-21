@@ -39,7 +39,7 @@ class BuyerProfileScreen extends StatelessWidget {
                       _buildPreferences(context, user),
                       _buildAccountActions(context),
                       const SizedBox(height: kSectionGap),
-                      _buildSwitchRoleButton(context, auth),
+                      // _buildSwitchRoleButton(context, auth),
                       const SizedBox(height: 80),
                     ],
                   ),
@@ -176,32 +176,32 @@ class BuyerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSwitchRoleButton(BuildContext context, AuthProvider auth) {
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: colorAccent,
-        minimumSize: const Size(double.infinity, 42),
-        side: const BorderSide(color: colorG200, width: 1.5),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(kRadiusBtn),
-        ),
-        elevation: 0,
-        textStyle: const TextStyle(
-          fontFamily: 'DM Sans',
-          fontWeight: FontWeight.w700,
-          fontSize: 12,
-        ),
-      ),
-      onPressed: () {
-        auth.switchRole(UserRole.seller);
-        auth.setUser(mockSellerUser);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('🌾 Switched to Seller mode')),
-        );
-      },
-      child: const Text('Switch to Seller Mode'),
-    );
-  }
+  // Widget _buildSwitchRoleButton(BuildContext context, AuthProvider auth) {
+  //   return OutlinedButton(
+  //     style: OutlinedButton.styleFrom(
+  //       foregroundColor: colorAccent,
+  //       minimumSize: const Size(double.infinity, 42),
+  //       side: const BorderSide(color: colorG200, width: 1.5),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(kRadiusBtn),
+  //       ),
+  //       elevation: 0,
+  //       textStyle: const TextStyle(
+  //         fontFamily: 'DM Sans',
+  //         fontWeight: FontWeight.w700,
+  //         fontSize: 12,
+  //       ),
+  //     ),
+  //     onPressed: () {
+  //       auth.switchRole(UserRole.seller);
+  //       auth.setUser(mockSellerUser);
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('🌾 Switched to Seller mode')),
+  //       );
+  //     },
+  //     child: const Text('Switch to Seller Mode'),
+  //   );
+  // }
 
   Widget _profileRow(
     String icon,
@@ -329,6 +329,11 @@ class BuyerProfileScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
                 context.read<AuthProvider>().logout();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/login', // or '/welcome', whatever your login route is named
+                      (route) => false, // removes all previous routes from stack
+                );
               },
               child: const Text('Yes, Log Out'),
             ),

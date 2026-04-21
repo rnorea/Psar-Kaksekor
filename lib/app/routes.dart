@@ -9,16 +9,17 @@ import 'package:phsar_kaksekor_app/screens/seller/seller_dashboard_screen.dart';
 import 'package:phsar_kaksekor_app/screens/seller/seller_profile_screen.dart';
 import 'package:phsar_kaksekor_app/screens/auth/login_screen.dart';
 import 'package:phsar_kaksekor_app/screens/auth/register_screen.dart';
- 
-const String routeLogin         = '/login';
+
+const String routeLogin         = '/';
 const String routeRegister      = '/register';
-const String routeBuyerHome     = '/';
+const String routeBuyerHome     = '/home';
 const String routeBrowse        = '/buyer/browse';
 const String routeCart          = '/buyer/cart';
 const String routeBuyerProfile  = '/buyer/profile';
 const String routeSellerDash    = '/seller/dashboard';
 const String routeSellerProfile = '/seller/profile';
- 
+const String routeLogout        = '/';
+
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case routeLogin:
@@ -41,4 +42,3 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const LoginScreen());
   }
 }
- 
