@@ -57,7 +57,7 @@ class _ProductDetailModalState extends State<ProductDetailModal>
         ),
         child: Column(
           children: [
-            // Hero
+            // ── Hero ─────────────────────────────────────────────────────
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -87,16 +87,17 @@ class _ProductDetailModalState extends State<ProductDetailModal>
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: colorAccent,
-                          borderRadius: BorderRadius.circular(kRadiusBadge),
+                      if (widget.product.isOrganic)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: colorAccent,
+                            borderRadius: BorderRadius.circular(kRadiusBadge),
+                          ),
+                          child: const Text('✓ Organic',
+                            style: TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w800, fontSize: 8.5, color: Colors.white),
+                          ),
                         ),
-                        child: const Text('✓ Organic',
-                          style: TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w800, fontSize: 8.5, color: Colors.white),
-                        ),
-                      ),
                     ],
                   ),
                   AnimatedBuilder(
@@ -111,7 +112,8 @@ class _ProductDetailModalState extends State<ProductDetailModal>
                 ],
               ),
             ),
-            // Body
+
+            // ── Body ─────────────────────────────────────────────────────
             Expanded(
               child: SingleChildScrollView(
                 controller: scrollController,
@@ -198,9 +200,15 @@ class _ProductDetailModalState extends State<ProductDetailModal>
   }
 }
 
-void showProductDetail(BuildContext context, ProductModel product, ValueChanged<int> onAddToCart) {
+// ── Fixed: useRootNavigator: true so modal works inside IndexedStack ──────────
+void showProductDetail(
+  BuildContext context,
+  ProductModel product,
+  ValueChanged<int> onAddToCart,
+) {
   showModalBottomSheet(
     context: context,
+    useRootNavigator: true,   // ← THIS is the fix for taps not working
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => ProductDetailModal(

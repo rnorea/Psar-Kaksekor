@@ -140,24 +140,46 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                   ),
                   const SizedBox(width: 12),
                   // Avatar
-                  Container(
-                    width: kAvatarSize,
-                    height: kAvatarSize,
-                    decoration: const BoxDecoration(
-                      color: colorLight,
-                      shape: BoxShape.circle,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      initial,
-                      style: const TextStyle(
-                        fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                        color: Colors.white,
+                  // Container(
+                  //   width: kAvatarSize,
+                  //   height: kAvatarSize,
+                  //   decoration: const BoxDecoration(
+                  //     color: colorLight,
+                  //     shape: BoxShape.circle,
+                  //   ),
+                  //   alignment: Alignment.center,
+                  //   child: Text(
+                  //     initial,
+                  //     style: const TextStyle(
+                  //       fontFamily: 'Nunito',
+                  //       fontWeight: FontWeight.w900,
+                  //       fontSize: 12,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  // ),
+                  GestureDetector(
+                    onTap: () => setState(() => _currentTab = 3),
+                    child: Container(
+                      width: kAvatarSize,
+                      height: kAvatarSize,
+                      decoration: const BoxDecoration(
+                        color: colorLight,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        initial,
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
+                
                 ],
               ),
             ],
@@ -250,7 +272,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
           ),
           itemCount: products.length,
           itemBuilder: (_, i) => ProductCard(
-              product: products[i],
+            product: products[i],
             onTap: () =>  showProductDetail(
               context,
                products[i], 

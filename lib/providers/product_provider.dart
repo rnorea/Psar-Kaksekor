@@ -33,7 +33,8 @@ class ProductProvider extends ChangeNotifier {
   List<ProductModel> get filteredProducts {
     List<ProductModel> result = _products;
 
-    // Resolve chip label to category key (e.g. '🥦 Vegetables' → 'veg')
+    // Resolve chip label to 
+    //gory key (e.g. '🥦 Vegetables' → 'veg')
     final catKey = _categoryMap[_selectedCategory] ?? _selectedCategory;
 
     if (catKey != 'all') {

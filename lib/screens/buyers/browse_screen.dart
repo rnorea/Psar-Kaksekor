@@ -6,6 +6,8 @@ import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
 import 'package:phsar_kaksekor_app/providers/product_provider.dart';
 import 'package:phsar_kaksekor_app/widgets/buyer/farm_pill.dart';
 import 'package:phsar_kaksekor_app/widgets/buyer/product_search_item.dart';
+import 'package:phsar_kaksekor_app/modals/product_detail_modal.dart';
+import 'package:phsar_kaksekor_app/providers/cart_provider.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -19,7 +21,12 @@ class _BrowseScreenState extends State<BrowseScreen> {
   bool _isSearching = false;
 
   final List<String> _categories = [
-    'All', '🥦 Vegetables', '🌾 Grains', '🍎 Fruits', '🌿 Herbs', '🥚 Eggs',
+    'All',
+    '🥦 Vegetables',
+    '🌾 Grains',
+    '🍎 Fruits',
+    '🌿 Herbs',
+    '🥚 Eggs',
   ];
   String _selectedCategory = 'All';
 
@@ -90,16 +97,22 @@ class _BrowseScreenState extends State<BrowseScreen> {
               prefixIcon: const Icon(Icons.search, color: colorG400, size: 16),
               suffixIcon: _isSearching
                   ? GestureDetector(
-                onTap: () {
-                  _searchCtrl.clear();
-                  context.read<ProductProvider>().setQuery('');
-                  setState(() => _isSearching = false);
-                },
-                child: const Icon(Icons.close, color: colorG400, size: 16),
-              )
+                      onTap: () {
+                        _searchCtrl.clear();
+                        context.read<ProductProvider>().setQuery('');
+                        setState(() => _isSearching = false);
+                      },
+                      child: const Icon(
+                        Icons.close,
+                        color: colorG400,
+                        size: 16,
+                      ),
+                    )
                   : null,
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(kRadiusInput),
                 borderSide: const BorderSide(color: Colors.white24, width: 1.5),
@@ -122,7 +135,12 @@ class _BrowseScreenState extends State<BrowseScreen> {
       height: 44,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.fromLTRB(kScreenPadding, 9, kScreenPadding, 0),
+        padding: const EdgeInsets.fromLTRB(
+          kScreenPadding,
+          9,
+          kScreenPadding,
+          0,
+        ),
         itemCount: _categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 7),
         itemBuilder: (_, i) {
@@ -132,6 +150,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
             onTap: () {
               setState(() => _selectedCategory = cat);
               context.read<ProductProvider>().setCategory(cat);
+              
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
@@ -182,7 +201,8 @@ class _BrowseScreenState extends State<BrowseScreen> {
   Widget _buildTrendingSection() {
     return Consumer<ProductProvider>(
       builder: (context, provider, _) {
-        final trending = provider.trendingProducts;
+        // final trending = provider.trendingProducts;
+        final trending = provider.filteredProducts;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -195,8 +215,8 @@ class _BrowseScreenState extends State<BrowseScreen> {
               separatorBuilder: (_, __) => const SizedBox(height: kListGap),
               itemBuilder: (_, i) => ProductSearchItem(
                 product: trending[i],
-                rank: i + 1,       // ← removed showRank, use rank directly
-                onTap: () {},       // ← wire to product detail later
+                rank: i + 1, // ← removed showRank, use rank directly
+                onTap: () {}, // ← wire to product detail later
               ),
             ),
           ],
@@ -208,6 +228,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
   Widget _buildSearchResults() {
     return Consumer<ProductProvider>(
       builder: (context, provider, _) {
+        
         final results = provider.filteredProducts;
         if (results.isEmpty) {
           return Center(
@@ -238,7 +259,12 @@ class _BrowseScreenState extends State<BrowseScreen> {
               itemBuilder: (_, i) => ProductSearchItem(
                 product: results[i],
                 // ← no rank passed = no rank shown, no showRank needed
-                onTap: () {},       // ← wire to product detail later
+                onTap: () => showProductDetail(
+                  context,
+                  results[i],
+                  (qrt) =>
+                      context.read<CartProvider>().addItem(results[i], qrt),
+                ),
               ),
             ),
           ],
