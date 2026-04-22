@@ -83,6 +83,7 @@ class _BuyerOrdersModalState extends State<BuyerOrdersModal> {
                   ),
                   const SizedBox(height: 12),
                   ..._filtered.map((order) => OrderCardBuyer(order: order)),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),

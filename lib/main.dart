@@ -14,5 +14,6 @@ void main() {
       statusBarIconBrightness: Brightness.light,
     ),
   );
+
   runApp(const PsarKaksekorApp());
 }

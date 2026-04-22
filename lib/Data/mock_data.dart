@@ -440,7 +440,16 @@ final List<OrderModel> mockSellerOrders = [
 final UserModel mockBuyerUser = UserModel(
   id: 'u1',
   name: 'Sopheak',
-  email: 'sopheak@example.com',
+  email: 'b',
+  phone: '+855 12 345 678',
+  location: 'Toul Kork, Phnom Penh',
+  role: UserRole.buyer,
+  avatarInitial: 'S',
+);
+final UserModel a = UserModel(
+  id: 'u1',
+  name: 'Sopheak',
+  email: 'b',
   phone: '+855 12 345 678',
   location: 'Toul Kork, Phnom Penh',
   role: UserRole.buyer,
@@ -450,7 +459,7 @@ final UserModel mockBuyerUser = UserModel(
 final UserModel mockSellerUser = UserModel(
   id: 'u2',
   name: 'Sophea Keo',
-  email: 'sophea@greenvalley.kh',
+  email: 's',
   phone: '+855 17 654 321',
   location: 'Kampong Speu',
   role: UserRole.seller,

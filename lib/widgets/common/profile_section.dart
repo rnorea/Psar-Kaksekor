@@ -4,12 +4,14 @@ import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
 
 class ProfileSection extends StatelessWidget {
   final String title;
+  final bool? btn;
   final List<Widget> rows;
 
   const ProfileSection({
     super.key,
     required this.title,
     required this.rows,
+    this.btn,
   });
 
   @override
@@ -25,15 +27,33 @@ class ProfileSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: 'Nunito',
-              fontWeight: FontWeight.w800,
-              fontSize: 11.5,
-              color: colorTextDark,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11.5,
+                  color: colorTextDark,
+                ),
+              ),
+              if (btn == true)
+                SizedBox(
+
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+
+                  ),
+
+                ),
+            ],
           ),
+
           const SizedBox(height: 10),
           ...rows,
         ],

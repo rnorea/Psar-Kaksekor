@@ -32,6 +32,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
 
   final List<Widget> _screens = [];
 
+
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
@@ -44,7 +45,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
         children: [
           _buildHomeBody(auth, cart),
           const BrowseScreen(),
-          const CartScreen(),
+          CartScreen(onBrowseTap: () => setState(() => _currentTab = 1)),
           const BuyerProfileScreen(),
         ],
       ),
@@ -65,11 +66,11 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               children: [
                 const SizedBox(height: kSectionGap),
                 _buildSectionTitle('🌿 Fresh Today'),
-                const SizedBox(height: 9),
-                _buildProductGrid(),
                 const SizedBox(height: kSectionGap),
-                _buildOrdersPreview(),
-                const SizedBox(height: 80),
+                _buildProductGrid(),
+                const SizedBox(height: 50),
+                // _buildOrdersPreview(),
+                // const SizedBox(height: 80),
               ],
             ),
           ),
@@ -226,6 +227,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               context.read<ProductProvider>().setCategory(cat);
             },
             child: AnimatedContainer(
+              alignment: Alignment.center,
               duration: const Duration(milliseconds: 150),
               padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
               decoration: BoxDecoration(
@@ -236,6 +238,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 cat,
                 style: chipLabel.copyWith(
                   color: isActive ? Colors.white : colorG600,
+
                 ),
               ),
             ),
@@ -262,13 +265,14 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
           );
         }
         return GridView.builder(
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: kGridGap,
             mainAxisSpacing: kGridGap,
-            childAspectRatio: 0.85,
+            childAspectRatio: 1,
           ),
           itemCount: products.length,
           itemBuilder: (_, i) => ProductCard(
@@ -356,7 +360,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
         color: Colors.white,
         border: Border(top: BorderSide(color: colorG200, width: 1)),
       ),
-      padding: const EdgeInsets.only(bottom: 8, top: 4),
+      padding: const EdgeInsets.only(bottom: 24, top: 10),
       child: Row(
         children: List.generate(items.length, (i) {
           final isActive = _currentTab == i;

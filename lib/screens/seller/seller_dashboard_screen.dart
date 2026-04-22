@@ -78,7 +78,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
         // ── Header ──────────────────────────────────────────────────────────
         Container(
           color: colorDark,
-          padding: const EdgeInsets.fromLTRB(15, kHeaderPaddingTop, 15, 16),
+          padding: const EdgeInsets.fromLTRB(15, kHeaderPaddingTop, 15, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -86,20 +86,21 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                 'Good morning,',
                 style: TextStyle(
                   fontFamily: 'DM Sans',
-                  fontSize: 10,
+                  fontSize: 12,
                   color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     sellerName,
                     style: const TextStyle(
                       fontFamily: 'Nunito',
                       fontWeight: FontWeight.w900,
-                      fontSize: 18,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   ),
@@ -126,11 +127,12 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 30),
               GridView.count(
+                padding: EdgeInsets.zero,
                 crossAxisCount: 2,
-                crossAxisSpacing: 7,
-                mainAxisSpacing: 7,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
                 childAspectRatio: 2.2,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -138,9 +140,10 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                   StatCard(value: '\$128', label: 'This month'),
                   StatCard(value: '7', label: 'New orders'),
                   StatCard(value: '4', label: 'Products listed'),
-                  StatCard(value: '4.8★', label: 'Avg rating'),
+                  StatCard(value: '4.8'+'★', label: 'Avg rating'),
                 ],
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -230,7 +233,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
         color: Colors.white,
         border: Border(top: BorderSide(color: colorG200, width: 1)),
       ),
-      padding: const EdgeInsets.only(bottom: 8, top: 4),
+      padding: const EdgeInsets.only(bottom: 24, top: 10),
       child: Row(
         children: List.generate(items.length, (i) {
           final isActive = _currentTab == i;

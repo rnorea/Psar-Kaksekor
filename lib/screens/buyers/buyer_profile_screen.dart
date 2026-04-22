@@ -88,22 +88,46 @@ class BuyerProfileScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(profile.email, style: metaText.copyWith(color: colorG400)),
           const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(kRadiusBadge),
-            ),
-            child: const Text(
-              '🛒 Buyer',
-              style: TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w700,
-                fontSize: 10,
-                color: Colors.white,
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(kRadiusBtn),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  width: 1.5,
+                ),
+              ),
+              child: const Text(
+                '✏ Edit Profile',
+                style: TextStyle(
+                  fontFamily: 'DM Sans',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
+          const SizedBox(height: 10),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white.withOpacity(0.12),
+          //     borderRadius: BorderRadius.circular(kRadiusBadge),
+          //   ),
+          //   child: const Text(
+          //     '🛒 Buyer',
+          //     style: TextStyle(
+          //       fontFamily: 'DM Sans',
+          //       fontWeight: FontWeight.w700,
+          //       fontSize: 10,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -331,8 +355,9 @@ class BuyerProfileScreen extends StatelessWidget {
                 context.read<AuthProvider>().logout();
                 Navigator.pushNamedAndRemoveUntil(
                   context,
-                  '/login', // or '/welcome', whatever your login route is named
-                      (route) => false, // removes all previous routes from stack
+                  '/',
+                  // '/login', // or '/welcome', whatever your login route is named
+                  (route) => false, // removes all previous routes from stack
                 );
               },
               child: const Text('Yes, Log Out'),

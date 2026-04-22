@@ -30,7 +30,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: kProductImgHeight,
+              height: kProductImgHeight+30,
               decoration: BoxDecoration(
                 color: product.bgColor,
                 borderRadius: BorderRadius.circular(kRadiusSmall),
@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 26),
               ),
             ),
-            const SizedBox(height: 7),
+            const SizedBox(height: 15),
             Text(product.name, style: titleSmall),
             Text(product.farmName, style: farmText),
             const SizedBox(height: 3),

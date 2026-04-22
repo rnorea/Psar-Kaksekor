@@ -216,7 +216,12 @@ class _BrowseScreenState extends State<BrowseScreen> {
               itemBuilder: (_, i) => ProductSearchItem(
                 product: trending[i],
                 rank: i + 1, // ← removed showRank, use rank directly
-                onTap: () {}, // ← wire to product detail later
+                onTap: () => showProductDetail(
+                  context,
+                  trending[i],
+                      (qrt) =>
+                      context.read<CartProvider>().addItem(trending[i], qrt),
+                ),// ← wire to product detail later
               ),
             ),
           ],
@@ -262,6 +267,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
                 onTap: () => showProductDetail(
                   context,
                   results[i],
+
                   (qrt) =>
                       context.read<CartProvider>().addItem(results[i], qrt),
                 ),
