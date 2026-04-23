@@ -267,12 +267,16 @@ class _CartScreenState extends State<CartScreen> {
     final auth = context.read<AuthProvider>();
     final user = auth.currentUser;
 
+    // get sellerId from the first cart item's product
+    final sellerId = cart.items.first.sellerId ?? '';
+
     context.read<OrderProvider>().placeOrder(
-      id: '#ORD-${DateTime.now().millisecondsSinceEpoch}',
-      farmName: 'Psar Kaksekor',
-      items: cart.items.toList(),
-      total: cart.total,
-      buyerName: user?.name ?? 'Guest',
+      buyerId:         user?.id ?? '',
+      sellerId:        sellerId,
+      farmName:        'Psar Kaksekor',
+      items:           cart.items.toList(),
+      total:           cart.total,
+      buyerName:       user?.name ?? 'Guest',
       deliveryAddress: user?.location ?? 'Phnom Penh',
     );
 
@@ -312,7 +316,6 @@ class _CartScreenState extends State<CartScreen> {
   void _openOrdersModal() {
     showBuyerOrders(
       context,
-      context.read<OrderProvider>().buyerOrders,
     );
   }
   Widget _buildOrdersPreview() {

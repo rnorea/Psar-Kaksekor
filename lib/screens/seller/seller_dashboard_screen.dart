@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_colors.dart';
 import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
 import 'package:phsar_kaksekor_app/providers/order_provider.dart';
@@ -21,6 +22,17 @@ class SellerDashboardScreen extends StatefulWidget {
 }
 
 class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final userId = context.read<AuthProvider>().currentUser!.id;
+      context.read<ProductProvider>().fetchSellerProducts(userId);
+      context.read<OrderProvider>().fetchSellerOrders(userId);
+    });
+  }
+
   int _currentTab = 0;
 
   void _openAddProduct() {
@@ -335,15 +347,29 @@ class _CompactOrderCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '#${order.id}',
-                  style: const TextStyle(
-                    fontFamily: 'Nunito',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 12,
-                    color: colorTextDark,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      'ID: ${order.id.substring(0, 8)}...',
+                      style: const TextStyle(
+                        fontFamily: 'Nunito',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                        color: colorTextDark,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.copy, size: 16),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: order.id));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('ID copied to clipboard')),
+                        );
+                      },
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: 2),
                 Text(
                   itemsSummary,

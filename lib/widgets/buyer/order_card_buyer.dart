@@ -5,6 +5,7 @@ import '../../core/constants/app_constants.dart';
 import 'package:phsar_kaksekor_app/models/order_model.dart';
 import '../common/status_badge.dart';
 import '../common/progress_tracker.dart';
+import 'package:flutter/services.dart';
 
 class OrderCardBuyer extends StatelessWidget {
   final OrderModel order;
@@ -43,7 +44,23 @@ class OrderCardBuyer extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(order.id, style: titleSmall.copyWith(fontSize: 12)),
+                  Row(
+                    children: [
+                      Text(
+                        'ID: ${order.id.substring(0, 8)}...',
+                        style: titleSmall.copyWith(fontSize: 12),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.copy, size: 16),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: order.id));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('ID copied to clipboard')),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   Text(order.farmName, style: metaText),
                 ],
               ),

@@ -6,6 +6,7 @@ import 'package:phsar_kaksekor_app/core/constants/app_constants.dart';
 import 'package:phsar_kaksekor_app/models/product_model.dart';
 import 'package:phsar_kaksekor_app/providers/product_provider.dart';
 import 'package:phsar_kaksekor_app/widgets/common/bottom_sheet_handle.dart';
+import 'package:phsar_kaksekor_app/providers/auth_provider.dart';
 
 class AddProductModal extends StatefulWidget {
   final ProductModel? editProduct;
@@ -85,50 +86,39 @@ class _AddProductModalState extends State<AddProductModal> {
     }
 
     final provider = context.read<ProductProvider>();
+    final sellerId = context.read<AuthProvider>().currentUser!.id;
 
-    // Map category label to key
     final catMap = {
-      '🥦 Vegetables': 'veg',
+      '🥦 Vegetables':    'veg',
       '🌾 Grains & Rice': 'grain',
-      '🍎 Fruits': 'fruit',
-      '🌿 Herbs': 'herb',
-      '🥚 Eggs & Dairy': 'dairy',
+      '🍎 Fruits':        'fruit',
+      '🌿 Herbs':         'herb',
+      '🥚 Eggs & Dairy':  'dairy',
     };
 
     final unitMap = {
-      'per kg': 'kg',
+      'per kg':    'kg',
       'per piece': 'pc',
       'per bunch': 'bunch',
-      'per bag': 'bag',
-    };
-
-    // Emoji + bg color by category
-    const emojiMap = {
-      'veg': ('🥦', Color(0xFFE8F5EC)),
-      'grain': ('🌾', Color(0xFFFFF8E1)),
-      'fruit': ('🍎', Color(0xFFFFEBEE)),
-      'herb': ('🌿', Color(0xFFE8F5EC)),
-      'dairy': ('🥚', Color(0xFFFFF9C4)),
+      'per bag':   'bag',
     };
 
     final catKey = catMap[_selectedCategory] ?? 'veg';
-    final (emoji, bgColor) = emojiMap[catKey] ?? ('🌿', const Color(0xFFE8F5EC));
 
     final newProduct = ProductModel(
-      id: isEditing
-          ? widget.editProduct!.id
-          : 'prod_${DateTime.now().millisecondsSinceEpoch}',
-      name: _nameCtrl.text.trim(),
-      farmName: 'My Farm',
-      emoji: emoji,
-      bgColor: bgColor,
-      basePrice: double.tryParse(_priceCtrl.text) ?? 0,
-      unit: unitMap[_selectedUnit] ?? 'kg',
-      stock: int.tryParse(_stockCtrl.text) ?? 0,
-      category: catKey,
+      id:          isEditing ? widget.editProduct!.id : '',  // Supabase generates it
+      name:        _nameCtrl.text.trim(),
+      farmName:    context.read<AuthProvider>().currentUser?.farmName ?? 'My Farm',
+      sellerId:    sellerId,
+      emoji:       '',    // derived locally in fromMap
+      bgColor:     const Color(0xFFE8F5EC),  // derived locally in fromMap
+      basePrice:   double.tryParse(_priceCtrl.text) ?? 0,
+      unit:        unitMap[_selectedUnit] ?? 'kg',
+      stock:       int.tryParse(_stockCtrl.text) ?? 0,
+      category:    catKey,
       description: _descCtrl.text.trim(),
-      isOrganic: _selectedCerts.contains('✓ Organic'),
-      rating: isEditing ? widget.editProduct!.rating : 0,
+      isOrganic:   _selectedCerts.contains('✓ Organic'),
+      rating:      isEditing ? widget.editProduct!.rating : 0,
       reviewCount: isEditing ? widget.editProduct!.reviewCount : 0,
     );
 
@@ -145,9 +135,7 @@ class _AddProductModalState extends State<AddProductModal> {
         content: Text(isEditing ? 'Product updated!' : 'Product added!'),
         backgroundColor: colorDark,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       ),
     );
   }

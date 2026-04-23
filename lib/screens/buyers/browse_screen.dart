@@ -155,6 +155,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: isActive ? colorDark : colorG100,
                 borderRadius: BorderRadius.circular(kRadiusChip),
@@ -175,25 +176,31 @@ class _BrowseScreenState extends State<BrowseScreen> {
   Widget _buildFarmsSection() {
     return Consumer<ProductProvider>(
       builder: (context, provider, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('🌾 Top Farms', style: sectionTitle),
-            const SizedBox(height: 9),
-            SizedBox(
-              height: 90,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: provider.farms.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemBuilder: (_, i) => FarmPill(
-                  farm: provider.farms[i],
-                  onTap: () {}, // wire to product detail later
+        int numItem = provider.farms.length;
+        if (numItem>0) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('🌾 Top Farms', style: sectionTitle),
+              const SizedBox(height: 9),
+              SizedBox(
+                height: 90,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: provider.farms.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  itemBuilder: (_, i) => FarmPill(
+                    farm: provider.farms[i],
+                    onTap: () {}, // wire to product detail later
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
+            ],
+          );
+        }
+        else{
+          return SizedBox();
+        }
       },
     );
   }
@@ -209,6 +216,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
             Text('🔥 Trending Products', style: sectionTitle),
             const SizedBox(height: 9),
             ListView.separated(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: trending.length,

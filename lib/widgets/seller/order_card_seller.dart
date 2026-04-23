@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/constants/app_constants.dart';
@@ -41,7 +42,23 @@ class OrderCardSeller extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(order.id, style: titleSmall.copyWith(fontSize: 12)),
+                  Row(
+                    children: [
+                      Text(
+                        'ID: ${order.id.substring(0, 8)}...',
+                        style: titleSmall.copyWith(fontSize: 12),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.copy, size: 16),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: order.id));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('ID copied to clipboard')),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   Text(order.buyerName, style: metaText),
                 ],
               ),

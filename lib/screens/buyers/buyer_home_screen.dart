@@ -14,15 +14,28 @@ import 'package:phsar_kaksekor_app/modals/buyer_orders_modal.dart';
 import 'package:phsar_kaksekor_app/screens/buyers/browse_screen.dart';
 import 'package:phsar_kaksekor_app/screens/buyers/cart_screen.dart';
 import 'package:phsar_kaksekor_app/screens/buyers/buyer_profile_screen.dart';
+import 'package:phsar_kaksekor_app/modals/buyer_orders_modal.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class BuyerHomeScreen extends StatefulWidget {
   const BuyerHomeScreen({super.key});
+
 
   @override
   State<BuyerHomeScreen> createState() => _BuyerHomeScreenState();
 }
 
 class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final userId = context.read<AuthProvider>().currentUser!.id;
+      context.read<ProductProvider>().fetchProducts();
+      context.read<OrderProvider>().fetchBuyerOrders(userId);
+    });
+  }
   int _currentTab = 0;
   String _selectedCategory = 'All';
 
@@ -58,6 +71,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
       children: [
         _buildHeader(auth, cart),
         _buildCategoryChips(),
+        SizedBox(height: 9),
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: kScreenPadding),
@@ -343,7 +357,6 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
   void _openOrdersModal() {
     showBuyerOrders(
       context,
-      context.read<OrderProvider>().buyerOrders,
     );
   }
 

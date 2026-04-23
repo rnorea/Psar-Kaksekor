@@ -20,15 +20,6 @@ class PsarKaksekorApp extends StatelessWidget {
     final orderProvider   = OrderProvider();
     final userProvider    = UserProvider();
 
-    // Seed products, farms, orders — but NOT the logged-in user
-    // The user must log in via the login screen
-    seedMockData(
-      productProvider: productProvider,
-      orderProvider:   orderProvider,
-      authProvider:    authProvider,
-      userProvider:    userProvider,
-    );
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: authProvider),

@@ -29,11 +29,13 @@ class CartProvider extends ChangeNotifier {
     } else {
       _items.add(CartItemModel(
         productId: product.id,
-        name: product.name,
-        emoji: product.emoji,
-        price: product.basePrice,
-        quantity: quantity,
-        unit: product.unit,
+        name:      product.name,
+        emoji:     product.emoji,
+        price:     product.basePrice,
+        quantity:  quantity,
+        unit:      product.unit,
+        category:  product.category,   // ← add
+        sellerId:  product.sellerId,   // ← add
       ));
     }
     notifyListeners();

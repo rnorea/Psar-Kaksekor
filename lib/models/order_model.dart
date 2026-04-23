@@ -31,10 +31,31 @@ extension OrderStatusExtension on OrderStatus {
       case OrderStatus.delivered: return OrderStatus.delivered;
     }
   }
+
+  // ── Supabase string conversion ──────────────────────────────────────────
+  String get toDb {
+    switch (this) {
+      case OrderStatus.pending:   return 'pending';
+      case OrderStatus.confirmed: return 'confirmed';
+      case OrderStatus.onWay:     return 'on_way';
+      case OrderStatus.delivered: return 'delivered';
+    }
+  }
+
+  static OrderStatus fromDb(String value) {
+    switch (value) {
+      case 'confirmed': return OrderStatus.confirmed;
+      case 'on_way':    return OrderStatus.onWay;
+      case 'delivered': return OrderStatus.delivered;
+      default:          return OrderStatus.pending;
+    }
+  }
 }
 
 class OrderModel {
   final String id;
+  final String buyerId;
+  final String sellerId;
   final String farmName;
   final List<CartItemModel> items;
   final double total;
@@ -45,6 +66,8 @@ class OrderModel {
 
   const OrderModel({
     required this.id,
+    required this.buyerId,
+    required this.sellerId,
     required this.farmName,
     required this.items,
     required this.total,
@@ -54,10 +77,43 @@ class OrderModel {
     required this.deliveryAddress,
   });
 
-  String get itemsSummary => items.map((i) => '${i.emoji} ${i.name} ${i.quantity}${i.unit}').join(' · ');
+  String get itemsSummary => items
+      .map((i) => '${i.emoji} ${i.name} ${i.quantity}${i.unit}')
+      .join(' · ');
+
+  // ── From Supabase ─────────────────────────────────────────────────────────
+  factory OrderModel.fromMap(Map<String, dynamic> map, List<CartItemModel> items) {
+    return OrderModel(
+      id:              map['id'],
+      buyerId:         map['buyer_id'] ?? '',
+      sellerId:        map['seller_id'] ?? '',
+      farmName:        map['farm_name'] ?? '',
+      items:           items,
+      total:           (map['total'] as num).toDouble(),
+      status:          OrderStatusExtension.fromDb(map['status']),
+      createdAt:       DateTime.parse(map['created_at']),
+      buyerName:       map['buyer_name'] ?? '',
+      deliveryAddress: map['delivery_address'] ?? '',
+    );
+  }
+
+  // ── To Supabase ───────────────────────────────────────────────────────────
+  Map<String, dynamic> toMap() {
+    return {
+      'buyer_id':         buyerId,
+      'seller_id':        sellerId,
+      'farm_name':        farmName,
+      'total':            total,
+      'status':           status.toDb,
+      'buyer_name':       buyerName,
+      'delivery_address': deliveryAddress,
+    };
+  }
 
   OrderModel copyWith({
     String? id,
+    String? buyerId,
+    String? sellerId,
     String? farmName,
     List<CartItemModel>? items,
     double? total,
@@ -68,6 +124,8 @@ class OrderModel {
   }) {
     return OrderModel(
       id:              id              ?? this.id,
+      buyerId:         buyerId         ?? this.buyerId,
+      sellerId:        sellerId        ?? this.sellerId,
       farmName:        farmName        ?? this.farmName,
       items:           items           ?? this.items,
       total:           total           ?? this.total,

@@ -419,34 +419,34 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
     );
   }
 
-  Widget _buildSwitchRoleButton(BuildContext context, AuthProvider auth) {
-    return GestureDetector(
-      onTap: () {
-        context.read<OrderProvider>().setBuyerOrders(mockBuyerOrders);
-        auth.setUser(mockBuyerUser);
-        auth.switchRole(UserRole.buyer);
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 13),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(kRadiusBtn),
-          border: Border.all(color: colorG200, width: 1.5),
-        ),
-        alignment: Alignment.center,
-        child: const Text(
-          '🛒 Switch to Buyer Mode',
-          style: TextStyle(
-            fontFamily: 'DM Sans',
-            fontWeight: FontWeight.w700,
-            fontSize: 12,
-            color: colorAccent,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildSwitchRoleButton(BuildContext context, AuthProvider auth) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       context.read<OrderProvider>().setBuyerOrders(mockBuyerOrders);
+  //       auth.setUser(mockBuyerUser);
+  //       auth.switchRole(UserRole.buyer);
+  //     },
+  //     child: Container(
+  //       width: double.infinity,
+  //       padding: const EdgeInsets.symmetric(vertical: 13),
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.circular(kRadiusBtn),
+  //         border: Border.all(color: colorG200, width: 1.5),
+  //       ),
+  //       alignment: Alignment.center,
+  //       child: const Text(
+  //         '🛒 Switch to Buyer Mode',
+  //         style: TextStyle(
+  //           fontFamily: 'DM Sans',
+  //           fontWeight: FontWeight.w700,
+  //           fontSize: 12,
+  //           color: colorAccent,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _confirmLogout(BuildContext context, AuthProvider auth) {
     showModalBottomSheet(
