@@ -30,7 +30,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: kProductImgHeight+10,
+              height: kProductImgHeight+40,
               decoration: BoxDecoration(
                 color: product.bgColor,
                 borderRadius: BorderRadius.circular(kRadiusSmall),
